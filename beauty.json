@@ -726,6 +726,16 @@
     "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
     "dependency": "After job - ZBLATD_HST_S03"
   },
+    {
+    "id": 119319,
+    "name": "ZBLATD_HST_S04_TEST",
+    "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
+    "region": "LAT",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": 0, "time": "00:00" },
+    "dependency": "After job - ZBLATD_HST_S03"
+  },
 
 
 
