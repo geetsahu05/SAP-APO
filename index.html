@@ -283,19 +283,31 @@
             return first;
         }
 
-        // Timezone Mapping
-        function getRegionTimezone(region) {
-            if (!region) return 'Europe/Berlin'; 
-            const r = region.toLowerCase();
-            if (r.includes('weu') || r.includes('cee') || r.includes('hibsa') || r.includes('de') || r.includes('uk') || r.includes('skp')) return 'Europe/Berlin'; 
-            if (r.includes('cis')) return 'Europe/Moscow';
-            if (r.includes('mea') || r.includes('bmea')) return 'Asia/Dubai';
-            if (r.includes('na') || r.includes('l na') || r.includes('est') || r.includes('america')) return 'America/New_York'; 
-            if (r.includes('lat') || r.includes('cot') || r.includes('colombia')) return 'America/Bogota'; 
-            if (r.includes('korea') || r.includes('kst')) return 'Asia/Seoul';
-            if (r.includes('anz') || r.includes('aest')) return 'Australia/Sydney';
-            if (r.includes('gcn') || r.includes('cst') || r.includes('apac')) return 'Asia/Shanghai'; 
-            return 'Europe/Berlin'; 
+        // Advanced Timezone Mapping
+        function getRegionTimezone(job) {
+            // 1. If an explicit timezone is provided in the rule, map it directly
+            if (job.rule && job.rule.timezone) {
+                const tz = job.rule.timezone.toUpperCase();
+                if (tz.includes('CET') || tz.includes('CEST')) return 'Europe/Berlin';
+                if (tz.includes('EST')) return 'America/New_York';
+                if (tz.includes('COT')) return 'America/Bogota';
+                if (tz.includes('CST') || tz.includes('BEIJING')) return 'Asia/Shanghai';
+                if (tz.includes('AEST') || tz.includes('AEDT') || tz.includes('SYDNEY')) return 'Australia/Sydney';
+                if (tz.includes('KST') || tz.includes('ROK')) return 'Asia/Seoul';
+                if (tz.includes('UTC') || tz.includes('UT')) return 'UTC';
+                return job.rule.timezone;
+            }
+            
+            // 2. Intelligent fallback parsing across both region and schedule text
+            const text = ((job.region || '') + ' ' + (job.schedule || '')).toUpperCase();
+            if (text.includes('EST') || text.includes('NA') || text.includes('CONNECTICUT') || text.includes('NY TIME')) return 'America/New_York';
+            if (text.includes('COT') || text.includes('COLOMBIA') || text.includes('LAT')) return 'America/Bogota';
+            if (text.includes('AEST') || text.includes('AEDT') || text.includes('SYDNEY') || text.includes('ANZ')) return 'Australia/Sydney';
+            if (text.includes('CST') || text.includes('CHINA') || text.includes('BEIJING') || text.includes('GCN')) return 'Asia/Shanghai';
+            if (text.includes('KST') || text.includes('ROK')) return 'Asia/Seoul';
+            if (text.includes('UTC') || text.includes('UT')) return 'UTC';
+            
+            return 'Europe/Berlin'; // Default fallback for CET, WEU, CEE, CIS, MEA, SKP, and DE
         }
 
         function isRunningOnDateLocal(job, targetDate) {
@@ -353,7 +365,7 @@
 
                 const hours = parseInt(match[1], 10);
                 const minutes = parseInt(match[2], 10);
-                const sourceTimezone = getRegionTimezone(job.region);
+                const sourceTimezone = getRegionTimezone(job);
 
                 checkDates.forEach(localDate => {
                     if (isRunningOnDateLocal(job, localDate.toJSDate())) {
