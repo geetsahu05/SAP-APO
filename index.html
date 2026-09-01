@@ -306,11 +306,17 @@
 
             switch (rule.frequency) {
                 case 'daily': return true;
-                case 'weekdays': return rule.days.includes(dayOfWeek);
+                case 'weekdays': 
+                    if (Array.isArray(rule.days)) return rule.days.includes(dayOfWeek);
+                    if (typeof rule.days === 'number') return rule.days === dayOfWeek;
+                    return [1, 2, 3, 4, 5].includes(dayOfWeek);
                 case 'weekly': return dayOfWeek === rule.day;
                 case 'monthly_start': return dayOfMonth === 1;
                 case 'monthly_first_wednesday': return dayOfWeek === 3 && dayOfMonth <= 7;
-                case 'custom_days': return rule.days.includes(dayOfWeek);
+                case 'custom_days': 
+                    if (Array.isArray(rule.days)) return rule.days.includes(dayOfWeek);
+                    if (typeof rule.days === 'number') return rule.days === dayOfWeek;
+                    return false;
                 default: return false;
             }
         }
@@ -406,7 +412,7 @@
             });
         }
 
-        // Core Data Loader (Strict GitHub Viewer - No Local Cache Fallback)
+        // Core Data Loader (Strict GitHub Viewer - Safe JSON Parser)
         async function loadSectorData() {
             const fileName = `./${currentSector}.json?t=${new Date().getTime()}`;
             
@@ -419,7 +425,12 @@
                 if (!textData || textData.trim() === "") {
                     jobsData = [];
                 } else {
-                    jobsData = JSON.parse(textData);
+                    try {
+                        jobsData = JSON.parse(textData);
+                    } catch (jsonErr) {
+                        console.error("JSON Syntax Error in your file:", jsonErr);
+                        jobsData = [];
+                    }
                 }
                 
                 applyFilters();
