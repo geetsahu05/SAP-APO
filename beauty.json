@@ -728,7 +728,7 @@
   },
     {
     "id": 119319,
-    "name": "ZBLATD_HST_S04_TEST",
+    "name": "ZBLATD_HST_S04",
     "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
     "region": "LAT",
     "abap": "N/A",
