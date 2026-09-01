@@ -84,10 +84,17 @@
 
         <!-- Right Content Area -->
         <main class="flex-1 flex flex-col overflow-hidden bg-slate-50/50">
-            <!-- Tabs -->
-            <div class="flex px-8 pt-5 gap-8 border-b border-slate-200 bg-white shrink-0">
-                <button onclick="switchTab('list')" id="tabList" class="pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors">Sequence List</button>
-                <button onclick="switchTab('chart')" id="tabChart" class="pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">Timeline Chart</button>
+            <!-- Tabs and Dynamic Keyword Filter -->
+            <div class="flex px-8 pt-5 gap-8 border-b border-slate-200 bg-white shrink-0 justify-between items-center">
+                <div class="flex gap-8">
+                    <button onclick="switchTab('list')" id="tabList" class="pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors">Sequence List</button>
+                    <button onclick="switchTab('chart')" id="tabChart" class="pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">Timeline Chart</button>
+                </div>
+                <div class="flex gap-2 pb-3 items-center">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider mr-2">Tags:</span>
+                    <div id="activeKeywords" class="flex gap-2 items-center flex-wrap"></div>
+                    <input type="text" id="customKeywordInput" placeholder="Type keyword & Enter..." class="px-3 py-1.5 text-xs font-bold rounded-full bg-slate-100 text-slate-700 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all w-48 placeholder-slate-400 shadow-inner">
+                </div>
             </div>
 
             <div id="viewList" class="flex-1 overflow-y-auto p-8 hidden">
@@ -222,6 +229,40 @@
         let currentSector = 'laundry';
         let jobsData = [];
         let selectedDate = new Date();
+        let activeKeywords = [];
+
+        // Dynamic Keyword Tag Logic
+        document.getElementById('customKeywordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = this.value.trim().toLowerCase();
+                if (val && !activeKeywords.includes(val)) {
+                    activeKeywords.push(val);
+                    this.value = '';
+                    renderKeywords();
+                    applyFilters();
+                }
+            }
+        });
+
+        function removeKeyword(kw) {
+            activeKeywords = activeKeywords.filter(k => k !== kw);
+            renderKeywords();
+            applyFilters();
+        }
+
+        function renderKeywords() {
+            const container = document.getElementById('activeKeywords');
+            container.innerHTML = '';
+            activeKeywords.forEach(kw => {
+                container.innerHTML += `
+                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-700 shadow-sm flex items-center gap-1">
+                        ${kw}
+                        <button onclick="removeKeyword('${kw}')" class="hover:bg-blue-200 hover:text-blue-900 rounded-full ml-0.5 px-1 focus:outline-none transition-colors">&times;</button>
+                    </span>
+                `;
+            });
+        }
 
         // Core Data Loader
         async function loadSectorData() {
@@ -231,7 +272,7 @@
             
             if (localData && localData !== "[]") {
                 jobsData = JSON.parse(localData);
-                renderAll();
+                applyFilters();
             } else {
                 try {
                     const response = await fetch(fileName);
@@ -242,7 +283,7 @@
                     console.error("Error fetching data:", error);
                     alert(`Could not load ${fileName}. Ensure it exists in your folder.`);
                     jobsData = [];
-                    renderAll();
+                    applyFilters();
                 }
             }
         }
@@ -250,7 +291,7 @@
         function saveJobs() {
             const storageKey = `apoJobs_${currentSector}`;
             localStorage.setItem(storageKey, JSON.stringify(jobsData));
-            renderAll();
+            applyFilters();
         }
 
         // Sector Switcher
@@ -267,10 +308,37 @@
                 document.getElementById('btnLaundry').className = btnInactive;
             }
             
-            // Reload search and reset views
             document.getElementById('searchInput').value = '';
+            activeKeywords = []; 
+            renderKeywords();
             loadSectorData();
         }
+
+        // Filter Logic (Search + Dynamic Keywords)
+        function applyFilters() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filteredData = jobsData.filter(job => {
+                // 1. General Text Search Filter
+                const matchesSearch = (job.name && job.name.toLowerCase().includes(query)) || 
+                                      (job.id && job.id.toString().includes(query)) ||
+                                      (job.region && job.region.toLowerCase().includes(query)) ||
+                                      (job.box && job.box.toLowerCase().includes(query));
+                
+                // 2. Dynamic Keyword Tag Filter (Must match ALL active keywords)
+                const matchesKeywords = activeKeywords.length === 0 || activeKeywords.every(kw => 
+                    (job.name && job.name.toLowerCase().includes(kw)) ||
+                    (job.box && job.box.toLowerCase().includes(kw)) ||
+                    (job.abap && job.abap.toLowerCase().includes(kw))
+                );
+                
+                return matchesSearch && matchesKeywords;
+            });
+            
+            renderAll(filteredData);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
 
         // Date Picker
         function initDatePicker() {
@@ -285,7 +353,7 @@
                     const [year, month, day] = e.target.value.split('-');
                     selectedDate = new Date(year, month - 1, day);
                     updateDateDisplay();
-                    renderDateList(jobsData);
+                    applyFilters(); 
                     updateCurrentTimeMarker();
                 }
             });
@@ -310,6 +378,8 @@
                 case 'weekdays': return rule.days.includes(dayOfWeek);
                 case 'weekly': return dayOfWeek === rule.day;
                 case 'monthly_start': return dayOfMonth === 1;
+                case 'monthly_first_wednesday': 
+                    return dayOfWeek === 3 && dayOfMonth <= 7;
                 case 'custom_days': return rule.days.includes(dayOfWeek);
                 default: return false;
             }
@@ -361,7 +431,7 @@
         }
         setInterval(updateCurrentTimeMarker, 60000);
 
-        function renderAll(dataToRender = jobsData) {
+        function renderAll(dataToRender) {
             renderDateList(dataToRender);
             renderMainList(dataToRender);
             renderAdvancedGantt(dataToRender);
@@ -375,7 +445,7 @@
             const filteredJobs = data.filter(job => isRunningOnDate(job, selectedDate));
             
             if(filteredJobs.length === 0) {
-                container.innerHTML = '<p class="text-sm text-slate-500 italic p-4">No jobs scheduled on this date.</p>';
+                container.innerHTML = '<p class="text-sm text-slate-500 italic p-4">No jobs scheduled on this date for current filters.</p>';
                 return;
             }
             
@@ -463,7 +533,7 @@
             });
         }
 
-        // Interactivity
+        // View Tabs Interactivity
         function switchTab(tabName) {
             const tabList = document.getElementById('tabList');
             const tabChart = document.getElementById('tabChart');
@@ -482,17 +552,6 @@
                 tabList.className = "pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors";
             }
         }
-
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const filtered = jobsData.filter(job => 
-                (job.name && job.name.toLowerCase().includes(query)) || 
-                (job.id && job.id.toString().includes(query)) ||
-                (job.region && job.region.toLowerCase().includes(query)) ||
-                (job.box && job.box.toLowerCase().includes(query))
-            );
-            renderAll(filtered);
-        });
 
         function toggleModal(modalId) { document.getElementById(modalId).classList.toggle('modal-active'); }
         function openDetailsById(id) { openDetails(jobsData.find(j => j.id === parseInt(id, 10))); }
@@ -526,7 +585,7 @@
             }
             
             jobsData.push(newJob);
-            saveJobs();
+            saveJobs(); 
             
             document.getElementById('addJobForm').reset();
             toggleModal('addJobModal');
