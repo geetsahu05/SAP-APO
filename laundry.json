@@ -1,0 +1,82 @@
+[
+  { 
+    "id": 31566, 
+    "name": "Test_Laundry_1", 
+    "box": "5972 (2) P33-APO-DP-MASTERDATA-BOX", 
+    "region": "HIBSA (FR, GR, CY, ES, PT)", 
+    "abap": "YWDT0060 (Variants: ZL810_ES...)", 
+    "schedule": "Daily 03:40", 
+    "rule": { "frequency": "daily", "time": "03:40" },
+    "dependency": "Parallel to 1st job" 
+  },
+  { 
+    "id": 37827, 
+    "name": "ZW001D2_NIDH", 
+    "box": "5972 (2) P33-APO-DP-MASTERDATA-BOX", 
+    "region": "001 PA (DE, UK, NO, BNL, CH)", 
+    "abap": "YWDT0060", 
+    "schedule": "Daily 04:00", 
+    "rule": { "frequency": "daily", "time": "04:00" },
+    "dependency": "Parallel to 1st job" 
+  },
+  { 
+    "id": 150486, 
+    "name": "ZLMEAD_NIDH", 
+    "box": "5972 (4) P33-APO-DP-MASTERDATA-BOX", 
+    "region": "MEA (Middle East & Africa)", 
+    "abap": "YWDT0060", 
+    "schedule": "Daily 05:30", 
+    "rule": { "frequency": "daily", "time": "05:30" },
+    "dependency": "Parallel to 1st job" 
+  },
+  { 
+    "id": 110967, 
+    "name": "ZLCEED_NIDH", 
+    "box": "21068 P33-APO-DP-MASTERDATA-BOX(CEE)", 
+    "region": "CEE (Central & Eastern Europe)", 
+    "abap": "YWDT0060", 
+    "schedule": "Daily 01:00", 
+    "rule": { "frequency": "daily", "time": "01:00" },
+    "dependency": "Parallel to 1st job" 
+  },
+  { 
+    "id": 82739, 
+    "name": "ZWKORD_NIDH", 
+    "box": "18281 P33-APO-DP-KOREA-MASTERDATA-BOX", 
+    "region": "APAC / Korea (KR, TW, AU, NZ, CN)", 
+    "abap": "YWDT0060", 
+    "schedule": "Daily 03:40 KST", 
+    "rule": { "frequency": "daily", "time": "03:40" },
+    "dependency": "Parallel to 1st job" 
+  },
+  { 
+    "id": 108873, 
+    "name": "ZLNALD_NIDH", 
+    "box": "20797 P33-APO-DP-NA-MD-BOX", 
+    "region": "NA (North America)", 
+    "abap": "YWDT0060", 
+    "schedule": "Mon to Fri 05:00", 
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "05:00" },
+    "dependency": "1st job" 
+  },
+  { 
+    "id": 24549, 
+    "name": "ZL000D_FCSTWS", 
+    "box": "24549 P33-APO-DP-L-FCSTWS-TZ1-BOX", 
+    "region": "WEU, CEE, MEA", 
+    "abap": "/SAPAPO/TS_BATCH_RUN", 
+    "schedule": "Weekly on Wednesdays 02:30", 
+    "rule": { "frequency": "weekly", "day": 3, "time": "02:30" },
+    "dependency": "1st job" 
+  },
+  { 
+    "id": 6136, 
+    "name": "P33-APO-DP-MFCSTSTORE-BOX", 
+    "box": "Monthly batch", 
+    "region": "DE, HI, IT, CEE, MEA", 
+    "abap": "/SAPAPO/TS_BATCH_RUN", 
+    "schedule": "First day of the month at 03:00", 
+    "rule": { "frequency": "monthly_start", "time": "03:00" },
+    "dependency": "1st job" 
+  }
+]
