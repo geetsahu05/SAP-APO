@@ -15,14 +15,12 @@
         .modal-active { display: flex !important; }
         
         .gantt-wrapper { display: flex; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #fff; height: 100%; }
-        /* Increased Sidebar z-index to 50 to ensure it overlaps everything horizontally */
         .gantt-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #e2e8f0; background: #f8fafc; z-index: 50; box-shadow: 2px 0 5px rgba(0,0,0,0.05); position: relative;}
         
         /* 24-Hour Container */
         .gantt-timeline-container { flex-grow: 1; overflow-x: auto; overflow-y: auto; position: relative; }
         .gantt-timeline-inner { min-width: 1200px; position: relative; min-height: 100%; }
         
-        /* Increased Header z-index to 40 so it stays above the scrolling bars */
         .gantt-header { display: flex; border-bottom: 1px solid #e2e8f0; height: 40px; background: #f8fafc; align-items: center; position: sticky; top: 0; z-index: 40;}
         .gantt-header-cell { font-size: 0.65rem; font-weight: 700; color: #64748b; text-align: center; border-right: 1px dashed #e2e8f0; flex: 1; display: flex; justify-content: center; align-items: center;}
         .gantt-header-cell:last-child { border-right: none; }
@@ -222,7 +220,7 @@
         let jobsData = [];
         let selectedDate = new Date();
         let activeKeywords = [];
-        let compiledExecutions = []; // Stores the final normalized IST executions
+        let compiledExecutions = []; 
 
         // Synchronize Scrolling between Sidebar and Timeline vertically
         function initScrollSync() {
@@ -261,7 +259,7 @@
             }
         }
 
-        // Helper to extract a short Region code (e.g. MEA, SKP, WEU) from full region string
+        // Helper to extract a short Region code (e.g. MEA, SKP, WEU)
         function getShortRegionCode(region) {
             if (!region) return '';
             const r = region.toUpperCase();
@@ -278,7 +276,6 @@
             if (r.includes('HIBSA')) return 'HIBSA';
             if (r.includes('NA ') || r.includes('NAB') || r.includes('L NA')) return 'NA';
             
-            // Extract first significant word if no standard match
             const parts = region.split(' ');
             const first = parts[0].replace(/[^A-Z0-9]/g, '');
             if (first.length > 0 && first !== 'B' && first !== 'UK' && first !== 'L') return first;
@@ -331,12 +328,10 @@
             return false;
         }
 
-        // CORE LOGIC REWRITE: Map everything strictly to the selected IST Date
         function compileISTExecutions(jobs, targetISTDate) {
             const results = [];
             const targetBase = luxon.DateTime.fromJSDate(targetISTDate).setZone('Asia/Kolkata').startOf('day');
             
-            // Check 3 local days to see if their execution translates into the target IST day
             const checkDates = [
                 targetBase.minus({days: 1}),
                 targetBase,
@@ -363,7 +358,6 @@
 
                         const istExecution = localExecution.setZone('Asia/Kolkata');
 
-                        // Keep ONLY if it lands on the specific date we are monitoring in IST
                         if (istExecution.hasSame(targetBase, 'day')) {
                             results.push({
                                 job: job,
@@ -380,7 +374,6 @@
                 });
             });
 
-            // Sort temporally
             results.sort((a, b) => a.sortMinutes - b.sortMinutes);
             return results;
         }
@@ -413,22 +406,30 @@
             });
         }
 
+        // Core Data Loader (Bypasses GitHub Cache)
         async function loadSectorData() {
+            const fileName = `./${currentSector}.json?t=${new Date().getTime()}`;
             const storageKey = `apoJobs_${currentSector}`;
-            const fileName = `./${currentSector}.json`;
-            const localData = localStorage.getItem(storageKey);
             
-            if (localData && localData !== "[]") {
-                jobsData = JSON.parse(localData);
+            try {
+                const response = await fetch(fileName, { cache: 'no-store' });
+                if (!response.ok) throw new Error(`Failed to load ${fileName}`);
+                jobsData = await response.json();
+                
+                // Update local storage silently so the frontend has a backup
+                localStorage.setItem(storageKey, JSON.stringify(jobsData));
                 applyFilters();
-            } else {
-                try {
-                    const response = await fetch(fileName);
-                    if (!response.ok) throw new Error(`Failed to load ${fileName}`);
-                    jobsData = await response.json();
-                    saveJobs(); 
-                } catch (error) {
-                    console.error("Error fetching data:", error);
+                
+            } catch (error) {
+                console.error("Error fetching live data. Falling back to local storage:", error);
+                
+                // Only use local storage as fallback
+                const localData = localStorage.getItem(storageKey);
+                if (localData && localData !== "[]") {
+                    jobsData = JSON.parse(localData);
+                    applyFilters();
+                } else {
+                    alert(`Could not load ${currentSector}.json. Ensure it is committed to GitHub.`);
                     jobsData = [];
                     applyFilters();
                 }
