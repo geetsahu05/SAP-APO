@@ -406,37 +406,34 @@
             });
         }
 
-        // Core Data Loader (Bypasses GitHub Cache)
+        // Core Data Loader (Strict GitHub Viewer - No Local Cache Fallback)
         async function loadSectorData() {
             const fileName = `./${currentSector}.json?t=${new Date().getTime()}`;
-            const storageKey = `apoJobs_${currentSector}`;
             
             try {
                 const response = await fetch(fileName, { cache: 'no-store' });
                 if (!response.ok) throw new Error(`Failed to load ${fileName}`);
-                jobsData = await response.json();
                 
-                // Update local storage silently so the frontend has a backup
-                localStorage.setItem(storageKey, JSON.stringify(jobsData));
+                const textData = await response.text();
+                
+                if (!textData || textData.trim() === "") {
+                    jobsData = [];
+                } else {
+                    jobsData = JSON.parse(textData);
+                }
+                
                 applyFilters();
                 
             } catch (error) {
-                console.error("Error fetching live data. Falling back to local storage:", error);
-                
-                // Only use local storage as fallback
-                const localData = localStorage.getItem(storageKey);
-                if (localData && localData !== "[]") {
-                    jobsData = JSON.parse(localData);
-                    applyFilters();
-                } else {
-                    alert(`Could not load ${currentSector}.json. Ensure it is committed to GitHub.`);
-                    jobsData = [];
-                    applyFilters();
-                }
+                console.error("Error fetching live data:", error);
+                jobsData = [];
+                applyFilters();
             }
         }
 
-        function saveJobs() { localStorage.setItem(`apoJobs_${currentSector}`, JSON.stringify(jobsData)); applyFilters(); }
+        function saveJobs() { 
+            applyFilters(); 
+        }
 
         function switchSector(sector) {
             currentSector = sector;
