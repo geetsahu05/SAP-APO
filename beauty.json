@@ -725,6 +725,83 @@
     "schedule": "Mon to Fri",
     "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
     "dependency": "After job - ZBLATD_HST_S03"
+  },
+
+
+
+
+
+
+
+  {
+    "id": 16140,
+    "name": "MC_YBDP_EU_FORECAST",
+    "box": "P31-APO-DP-UK-FCST-BOX",
+    "region": "EU (WEU, CEE, SKP), CIS, MEA",
+    "abap": "CAPCHAIN",
+    "schedule": "19:00 pm CET Sunday",
+    "rule": {
+      "frequency": "weekly",
+      "day": 0,
+      "time": "19:00"
+    },
+    "dependency": "1st job"
+  },
+  {
+    "id": 18478,
+    "name": "MC_YBDP_AP_FORECAST",
+    "box": "P31-APO-DP-UK-FCST-APAC-BOX",
+    "region": "APAC",
+    "abap": "CAPCHAIN",
+    "schedule": "18:00 pm CET Sunday",
+    "rule": {
+      "frequency": "weekly",
+      "day": 0,
+      "time": "18:00"
+    },
+    "dependency": "1st job"
+  },
+  {
+    "id": 20777,
+    "name": "YBDP_NAB_FORECAST",
+    "box": "P31-APO-DP-UK-FCST-NA-BOX",
+    "region": "NA",
+    "abap": "CAPCHAIN",
+    "schedule": "23:00 PM EST5EDT Sunday",
+    "rule": {
+      "frequency": "weekly",
+      "day": 0,
+      "time": "23:00"
+    },
+    "dependency": "1st job"
+  },
+  {
+    "id": 23030,
+    "name": "YBDP_LAM_FORECAST",
+    "box": "P31-APO-DP-B-FCST-LAT-BOX",
+    "region": "LAT",
+    "abap": "CAPCHAIN",
+    "schedule": "23:00 PM COT Sunday",
+    "rule": {
+      "frequency": "weekly",
+      "day": 0,
+      "time": "23:00"
+    },
+    "dependency": "1st job"
+  },
+  {
+    "id": ,
+    "name": "YBDP_NAB_FORECAST_RETAIL",
+    "box": "P31-APO-DP-UK-FCST-NA-RET-BOX",
+    "region": "NA Retail",
+    "abap": "CAPCHAIN",
+    "schedule": "23:00 PM EST Sunday",
+    "rule": {
+      "frequency": "weekly",
+      "day": 0,
+      "time": "23:00"
+    },
+    "dependency": "1st job"
   }
   
 ]
