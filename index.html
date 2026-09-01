@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APO DP Batch Monitor (3-Day IST Timeline)</title>
+    <title>APO DP Batch Monitor (IST Operator View)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
     <style>
-        ::-webkit-scrollbar { height: 10px; width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; border: 2px solid #f1f5f9; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
         .modal-active { display: flex !important; }
         
         .gantt-wrapper { display: flex; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #fff; height: 100%; }
-        .gantt-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #e2e8f0; background: #f8fafc; z-index: 30; box-shadow: 2px 0 5px rgba(0,0,0,0.05); position: relative;}
+        .gantt-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #e2e8f0; background: #f8fafc; z-index: 20; box-shadow: 2px 0 5px rgba(0,0,0,0.05); position: relative;}
         
-        /* Smooth scrolling container (Y enabled for sync) */
+        /* 24-Hour Container */
         .gantt-timeline-container { flex-grow: 1; overflow-x: auto; overflow-y: auto; position: relative; }
-        
-        /* Expanded to 72 Hours (3 Days) */
-        .gantt-timeline-inner { min-width: 3600px; position: relative; min-height: 100%; }
+        .gantt-timeline-inner { min-width: 1200px; position: relative; min-height: 100%; }
         
         .gantt-header { display: flex; border-bottom: 1px solid #e2e8f0; height: 40px; background: #f8fafc; align-items: center; position: sticky; top: 0; z-index: 20;}
         .gantt-header-cell { font-size: 0.65rem; font-weight: 700; color: #64748b; text-align: center; border-right: 1px dashed #e2e8f0; flex: 1; display: flex; justify-content: center; align-items: center;}
@@ -40,10 +38,6 @@
         .gantt-bar { position: absolute; top: 10px; height: 28px; border-radius: 6px; color: white; font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; justify-content: center; padding: 0 8px; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); pointer-events: auto; overflow: hidden; text-overflow: ellipsis; border: 1px solid rgba(255,255,255,0.2); }
         .gantt-bar:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); filter: brightness(1.1); z-index: 30; outline: 2px solid #fff; }
         
-        /* Day Shift Patterns */
-        .bar-shift-next { background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0, rgba(0,0,0,0.1) 4px, transparent 4px, transparent 8px); }
-        .bar-shift-prev { background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,0.1) 0, rgba(0,0,0,0.1) 4px, transparent 4px, transparent 8px); }
-        
         .current-time-line { position: absolute; top: 0; bottom: 0; width: 2px; background-color: #ef4444; z-index: 25; pointer-events: none; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
         .current-time-marker { position: absolute; top: 40px; left: -24px; background: #ef4444; color: #fff; font-size: 0.65rem; padding: 3px 8px; border-radius: 0 0 6px 6px; font-weight: 800; width: 50px; text-align: center; border: 1px solid #dc2626; border-top: none; }
     </style>
@@ -54,7 +48,7 @@
         <div class="flex items-center gap-6">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold shadow-md">APO</div>
-                <h1 class="text-xl font-bold text-slate-800 tracking-tight">Batch Scheduler</h1>
+                <h1 class="text-xl font-bold text-slate-800 tracking-tight">Batch Scheduler (IST Focus)</h1>
             </div>
             
             <div class="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
@@ -79,7 +73,7 @@
         <aside class="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0 z-10">
             <div class="p-5 border-b border-slate-100 bg-slate-50/80">
                 <div class="flex justify-between items-center mb-2">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500">Schedule Viewer</h2>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500">Monitor Target Date (IST)</h2>
                 </div>
                 <input type="date" id="dateSelector" class="w-full mb-3 px-3 py-2 border border-slate-300 rounded text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-sm transition-all">
                 <p id="currentDateDisplay" class="text-sm font-semibold text-blue-600"></p>
@@ -90,8 +84,8 @@
         <main class="flex-1 flex flex-col overflow-hidden bg-slate-50/50">
             <div class="flex px-8 pt-5 gap-8 border-b border-slate-200 bg-white shrink-0 justify-between items-center">
                 <div class="flex gap-8">
-                    <button onclick="switchTab('list')" id="tabList" class="pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors">Sequence List</button>
-                    <button onclick="switchTab('chart')" id="tabChart" class="pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">3-Day Continuous Timeline (IST)</button>
+                    <button onclick="switchTab('list')" id="tabList" class="pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors">IST Execution List</button>
+                    <button onclick="switchTab('chart')" id="tabChart" class="pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">24-Hour Timeline</button>
                 </div>
                 <div class="flex gap-2 pb-3 items-center">
                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider mr-2">Tags:</span>
@@ -108,32 +102,21 @@
             </div>
 
             <div id="viewChart" class="flex-1 overflow-hidden p-8 flex flex-col">
-                <div class="mb-3 flex justify-between items-center w-full px-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    <button onclick="scrollTimeline(-1)" class="hover:text-blue-600 transition-colors flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Scroll Prev Day</button>
-                    <button onclick="centerTimeline()" class="bg-white border border-slate-200 px-3 py-1 rounded-full shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors">Center to Selected Date</button>
-                    <button onclick="scrollTimeline(1)" class="hover:text-blue-600 transition-colors flex items-center gap-1">Scroll Next Day <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
-                </div>
-                
                 <div class="gantt-wrapper shadow-sm flex-1 relative">
                     <div class="gantt-sidebar flex flex-col">
                         <div class="gantt-header border-r border-slate-200 px-4">
-                            <span class="text-xs font-bold text-slate-500 uppercase">Batch Process / Job Name</span>
+                            <span class="text-xs font-bold text-slate-500 uppercase">Batch Process</span>
                         </div>
                         <div id="ganttLabelsContainer" class="bg-white pb-4 overflow-y-auto flex-1 custom-scroll"></div>
                     </div>
                     
                     <div class="gantt-timeline-container" id="timelineScrollContainer">
                         <div class="gantt-timeline-inner" id="ganttTimelineInner">
-                            <!-- Background Day Zones -->
-                            <div id="ganttBackgrounds"></div>
-                            
                             <div class="gantt-header" id="ganttTimeHeaders"></div>
                             <div class="gantt-grid" id="ganttGridLines"></div>
-                            
                             <div id="currentTimeLine" class="current-time-line hidden">
                                 <div class="current-time-marker" id="currentTimeText"></div>
                             </div>
-                            
                             <div id="ganttBarsContainer" class="pb-4 relative z-20"></div>
                         </div>
                     </div>
@@ -201,26 +184,28 @@
                 <button onclick="toggleModal('detailsModal')" class="text-slate-400 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 rounded-full p-2 transition-colors">&times;</button>
             </div>
             <div class="p-6 flex-1 overflow-y-auto space-y-6 bg-slate-50/50">
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Region</h4>
-                    <p id="detRegion" class="text-slate-800 text-sm font-bold"></p>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 shadow-sm flex-1 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-blue-600 text-white text-[9px] font-black px-3 py-1 rounded-bl-lg tracking-wider">IST MONITOR TIME</div>
+                    <h4 class="text-[10px] font-black text-blue-600/70 uppercase tracking-wider mb-1 mt-2">Will Execute At</h4>
+                    <p id="detScheduleIST" class="text-blue-700 text-2xl font-black"></p>
                 </div>
+                
                 <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex-1">
-                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Execution Schedule (Local)</h4>
-                    <p id="detSchedule" class="text-slate-700 text-sm font-bold"></p>
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Local Configured Schedule</h4>
+                    <p id="detScheduleLocal" class="text-slate-700 text-sm font-bold"></p>
+                    <p id="detRegion" class="text-slate-500 text-xs mt-1"></p>
                 </div>
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 shadow-sm flex-1">
-                    <h4 class="text-[10px] font-black text-blue-600/70 uppercase tracking-wider mb-1">Converted Schedule (IST)</h4>
-                    <p id="detScheduleIST" class="text-blue-700 text-sm font-black"></p>
-                </div>
+
                 <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                     <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Box / Process Chain</h4>
                     <p id="detBox" class="text-slate-700 text-sm font-mono bg-slate-50 p-2.5 rounded-lg border border-slate-100 mt-1"></p>
                 </div>
+                
                 <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                     <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">ABAP Program</h4>
                     <p id="detAbap" class="text-slate-700 text-sm whitespace-pre-wrap"></p>
                 </div>
+                
                 <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 shadow-sm">
                     <h4 class="text-[10px] font-black text-amber-600/70 uppercase tracking-wider mb-1">Dependency Link</h4>
                     <p id="detDependency" class="text-amber-800 text-sm font-medium"></p>
@@ -235,78 +220,43 @@
         let jobsData = [];
         let selectedDate = new Date();
         let activeKeywords = [];
+        let compiledExecutions = []; // Stores the final normalized IST executions
 
         // Synchronize Scrolling between Sidebar and Timeline vertically
         function initScrollSync() {
             const labelsContainer = document.getElementById('ganttLabelsContainer');
             const timelineContainer = document.getElementById('timelineScrollContainer');
-
-            let isSyncingLeft = false;
-            let isSyncingRight = false;
-
+            let isSyncingLeft = false; let isSyncingRight = false;
+            
             labelsContainer.addEventListener('scroll', function() {
-                if (!isSyncingLeft) {
-                    isSyncingRight = true;
-                    timelineContainer.scrollTop = this.scrollTop;
-                }
+                if (!isSyncingLeft) { isSyncingRight = true; timelineContainer.scrollTop = this.scrollTop; }
                 isSyncingLeft = false;
             });
-
             timelineContainer.addEventListener('scroll', function() {
-                if (!isSyncingRight) {
-                    isSyncingLeft = true;
-                    labelsContainer.scrollTop = this.scrollTop;
-                }
+                if (!isSyncingRight) { isSyncingLeft = true; labelsContainer.scrollTop = this.scrollTop; }
                 isSyncingRight = false;
             });
         }
 
-        // Dynamic 72-Hour Grid Generator
+        // Standard 24-Hour Grid
         function generateGanttGrid() {
             const headersContainer = document.getElementById('ganttTimeHeaders');
             const gridContainer = document.getElementById('ganttGridLines');
-            const bgContainer = document.getElementById('ganttBackgrounds');
             
             headersContainer.innerHTML = '';
             gridContainer.innerHTML = '';
-            
-            // 3-Day Background Theme setup with sticky day markers
-            bgContainer.innerHTML = `
-                <div class="absolute top-0 bottom-0 left-0 w-[33.333%] bg-slate-200/40 border-r-4 border-slate-300 z-0 flex justify-center"><span class="text-[10px] font-bold text-slate-400 opacity-60 uppercase tracking-widest mt-12 bg-white/50 px-3 py-1 rounded-full shadow-sm backdrop-blur-sm sticky top-12 h-6">Previous Day</span></div>
-                <div class="absolute top-0 bottom-0 left-[33.333%] w-[33.333%] bg-white border-r-4 border-slate-300 z-0 flex justify-center"><span class="text-[10px] font-bold text-blue-500 opacity-80 uppercase tracking-widest mt-12 bg-blue-50 px-3 py-1 rounded-full shadow-sm border border-blue-100 sticky top-12 h-6">Selected Date</span></div>
-                <div class="absolute top-0 bottom-0 left-[66.666%] w-[33.333%] bg-blue-50/40 z-0 flex justify-center"><span class="text-[10px] font-bold text-blue-400 opacity-60 uppercase tracking-widest mt-12 bg-white/50 px-3 py-1 rounded-full shadow-sm backdrop-blur-sm sticky top-12 h-6">Next Day</span></div>
-            `;
 
-            for(let i = 0; i < 72; i++) {
-                const hourString = (i % 24).toString().padStart(2, '0');
-                
-                // Header
+            for(let i = 0; i < 24; i++) {
+                const hourString = i.toString().padStart(2, '0');
                 const headerCell = document.createElement('div');
                 headerCell.className = 'gantt-header-cell';
-                if (i % 2 === 0) { // Render labels every 2 hours to prevent clutter
-                    headerCell.innerText = `${hourString}:00`;
-                }
+                headerCell.innerText = `${hourString}:00`;
                 headersContainer.appendChild(headerCell);
                 
-                // Grid Lines
                 const gridLine = document.createElement('div');
                 gridLine.className = 'gantt-grid-line';
                 gridContainer.appendChild(gridLine);
             }
-        }
-
-        function scrollTimeline(direction) {
-            const container = document.getElementById('timelineScrollContainer');
-            const segmentWidth = container.scrollWidth / 3;
-            container.scrollBy({ left: segmentWidth * direction, behavior: 'smooth' });
-        }
-
-        function centerTimeline() {
-            const container = document.getElementById('timelineScrollContainer');
-            setTimeout(() => {
-                const targetScroll = (container.scrollWidth / 3) - 20; 
-                container.scrollTo({ left: targetScroll, behavior: 'smooth' });
-            }, 50);
         }
 
         // Timezone Mapping
@@ -324,40 +274,90 @@
             return 'Europe/Berlin'; 
         }
 
-        function convertToIST(timeString, region, evalDate) {
-            if (!timeString) return null;
-            const match = timeString.match(/(\d{2}):(\d{2})/);
-            if (!match) return null;
-            
-            const hours = parseInt(match[1], 10);
-            const minutes = parseInt(match[2], 10);
-            const sourceTimezone = getRegionTimezone(region);
-            
-            // Create time based on the SPECIFIC evaluation date to accurately catch DST
-            const regionalTime = luxon.DateTime.fromObject({
-                year: evalDate.getFullYear(),
-                month: evalDate.getMonth() + 1,
-                day: evalDate.getDate(),
-                hour: hours,
-                minute: minutes
-            }, { zone: sourceTimezone });
+        function isRunningOnDateLocal(job, targetDate) {
+            if (!job.rule) return isRunningOnLegacyString(job.schedule, targetDate);
+            const rule = job.rule;
+            const dayOfWeek = targetDate.getDay();
+            const dayOfMonth = targetDate.getDate();
 
-            const istTime = regionalTime.setZone('Asia/Kolkata');
-            
-            // Determine if the conversion pushed the local job execution into the next or previous day
-            let diffDays = 0;
-            if (istTime.hasSame(regionalTime.plus({days: 1}), 'day')) diffDays = 1;
-            if (istTime.hasSame(regionalTime.minus({days: 1}), 'day')) diffDays = -1;
-
-            return {
-                hours: istTime.hour,
-                minutes: istTime.minute,
-                formatted: istTime.toFormat('HH:mm'),
-                diffDays: diffDays 
-            };
+            switch (rule.frequency) {
+                case 'daily': return true;
+                case 'weekdays': return rule.days.includes(dayOfWeek);
+                case 'weekly': return dayOfWeek === rule.day;
+                case 'monthly_start': return dayOfMonth === 1;
+                case 'monthly_first_wednesday': return dayOfWeek === 3 && dayOfMonth <= 7;
+                case 'custom_days': return rule.days.includes(dayOfWeek);
+                default: return false;
+            }
         }
 
-        // Keyword Filtering
+        function isRunningOnLegacyString(scheduleStr, targetDate) {
+            if (!scheduleStr) return false;
+            const lowerSch = scheduleStr.toLowerCase();
+            const targetDayShort = targetDate.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
+            const targetDayLong = targetDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+            const targetDayNum = targetDate.getDay(); 
+            if (lowerSch.includes('daily')) return true;
+            if (lowerSch.includes(targetDayShort) || lowerSch.includes(targetDayLong)) return true;
+            if ((lowerSch.includes('mon to fri') || lowerSch.includes('mon-fri')) && targetDayNum >= 1 && targetDayNum <= 5) return true;
+            if (lowerSch.includes('first day of the month') && targetDate.getDate() === 1) return true;
+            return false;
+        }
+
+        // CORE LOGIC REWRITE: Map everything strictly to the selected IST Date
+        function compileISTExecutions(jobs, targetISTDate) {
+            const results = [];
+            const targetBase = luxon.DateTime.fromJSDate(targetISTDate).setZone('Asia/Kolkata').startOf('day');
+            
+            // Check 3 local days to see if their execution translates into the target IST day
+            const checkDates = [
+                targetBase.minus({days: 1}),
+                targetBase,
+                targetBase.plus({days: 1})
+            ];
+
+            jobs.forEach(job => {
+                const timeString = job.rule?.time || (job.schedule ? job.schedule.match(/(\d{2}):(\d{2})/) : null);
+                if (!timeString) return; 
+
+                const match = (typeof timeString === 'string') ? timeString.match(/(\d{2}):(\d{2})/) : timeString;
+                if (!match) return;
+
+                const hours = parseInt(match[1], 10);
+                const minutes = parseInt(match[2], 10);
+                const sourceTimezone = getRegionTimezone(job.region);
+
+                checkDates.forEach(localDate => {
+                    if (isRunningOnDateLocal(job, localDate.toJSDate())) {
+                        const localExecution = luxon.DateTime.fromObject({
+                            year: localDate.year, month: localDate.month, day: localDate.day,
+                            hour: hours, minute: minutes
+                        }, { zone: sourceTimezone });
+
+                        const istExecution = localExecution.setZone('Asia/Kolkata');
+
+                        // Keep ONLY if it lands on the specific date we are monitoring in IST
+                        if (istExecution.hasSame(targetBase, 'day')) {
+                            results.push({
+                                job: job,
+                                istTime: istExecution,
+                                localTime: localExecution,
+                                formattedIST: istExecution.toFormat('HH:mm'),
+                                formattedLocal: localExecution.toFormat('HH:mm'),
+                                localDateStr: localExecution.toFormat('cccc, LLL d'),
+                                sortMinutes: (istExecution.hour * 60) + istExecution.minute
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Sort temporally
+            results.sort((a, b) => a.sortMinutes - b.sortMinutes);
+            return results;
+        }
+
+        // Keywords & UI
         document.getElementById('customKeywordInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -371,11 +371,7 @@
             }
         });
 
-        function removeKeyword(kw) {
-            activeKeywords = activeKeywords.filter(k => k !== kw);
-            renderKeywords();
-            applyFilters();
-        }
+        function removeKeyword(kw) { activeKeywords = activeKeywords.filter(k => k !== kw); renderKeywords(); applyFilters(); }
 
         function renderKeywords() {
             const container = document.getElementById('activeKeywords');
@@ -385,12 +381,10 @@
                     <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-700 shadow-sm flex items-center gap-1">
                         ${kw}
                         <button onclick="removeKeyword('${kw}')" class="hover:bg-blue-200 hover:text-blue-900 rounded-full ml-0.5 px-1 focus:outline-none transition-colors">&times;</button>
-                    </span>
-                `;
+                    </span>`;
             });
         }
 
-        // Data Management
         async function loadSectorData() {
             const storageKey = `apoJobs_${currentSector}`;
             const fileName = `./${currentSector}.json`;
@@ -413,24 +407,12 @@
             }
         }
 
-        function saveJobs() {
-            const storageKey = `apoJobs_${currentSector}`;
-            localStorage.setItem(storageKey, JSON.stringify(jobsData));
-            applyFilters();
-        }
+        function saveJobs() { localStorage.setItem(`apoJobs_${currentSector}`, JSON.stringify(jobsData)); applyFilters(); }
 
         function switchSector(sector) {
             currentSector = sector;
-            const btnActive = "px-5 py-1.5 text-sm font-bold rounded-md bg-white shadow-sm text-blue-600 transition-all";
-            const btnInactive = "px-5 py-1.5 text-sm font-bold rounded-md text-slate-500 hover:text-slate-700 transition-all";
-            
-            if (sector === 'laundry') {
-                document.getElementById('btnLaundry').className = btnActive;
-                document.getElementById('btnBeauty').className = btnInactive;
-            } else {
-                document.getElementById('btnBeauty').className = btnActive;
-                document.getElementById('btnLaundry').className = btnInactive;
-            }
+            document.getElementById('btnLaundry').className = sector === 'laundry' ? "px-5 py-1.5 text-sm font-bold rounded-md bg-white shadow-sm text-blue-600 transition-all" : "px-5 py-1.5 text-sm font-bold rounded-md text-slate-500 hover:text-slate-700 transition-all";
+            document.getElementById('btnBeauty').className = sector === 'beauty' ? "px-5 py-1.5 text-sm font-bold rounded-md bg-white shadow-sm text-blue-600 transition-all" : "px-5 py-1.5 text-sm font-bold rounded-md text-slate-500 hover:text-slate-700 transition-all";
             
             document.getElementById('searchInput').value = '';
             activeKeywords = []; 
@@ -440,7 +422,7 @@
 
         function applyFilters() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const filteredData = jobsData.filter(job => {
+            const filteredJobs = jobsData.filter(job => {
                 const matchesSearch = (job.name && job.name.toLowerCase().includes(query)) || 
                                       (job.id && job.id.toString().includes(query)) ||
                                       (job.region && job.region.toLowerCase().includes(query)) ||
@@ -453,12 +435,13 @@
                 );
                 return matchesSearch && matchesKeywords;
             });
-            renderAll(filteredData);
+            
+            compiledExecutions = compileISTExecutions(filteredJobs, selectedDate);
+            renderAll();
         }
 
         document.getElementById('searchInput').addEventListener('input', applyFilters);
 
-        // Date Picker
         function initDatePicker() {
             const dateInput = document.getElementById('dateSelector');
             const yyyy = selectedDate.getFullYear();
@@ -472,7 +455,6 @@
                     selectedDate = new Date(year, month - 1, day);
                     updateDateDisplay();
                     applyFilters(); 
-                    updateCurrentTimeMarker();
                 }
             });
             updateDateDisplay();
@@ -480,40 +462,7 @@
 
         function updateDateDisplay() {
             const dateStr = selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-            document.getElementById('currentDateDisplay').innerText = dateStr;
-        }
-
-        function isRunningOnDate(job, targetDate) {
-            if (!job.rule) return isRunningOnLegacyString(job.schedule, targetDate);
-
-            const rule = job.rule;
-            const dayOfWeek = targetDate.getDay();
-            const dayOfMonth = targetDate.getDate();
-
-            switch (rule.frequency) {
-                case 'daily': return true;
-                case 'weekdays': return rule.days.includes(dayOfWeek);
-                case 'weekly': return dayOfWeek === rule.day;
-                case 'monthly_start': return dayOfMonth === 1;
-                case 'monthly_first_wednesday': 
-                    return dayOfWeek === 3 && dayOfMonth <= 7;
-                case 'custom_days': return rule.days.includes(dayOfWeek);
-                default: return false;
-            }
-        }
-
-        function isRunningOnLegacyString(scheduleStr, targetDate) {
-            if (!scheduleStr) return false;
-            const lowerSch = scheduleStr.toLowerCase();
-            const targetDayShort = targetDate.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
-            const targetDayLong = targetDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-            const targetDayNum = targetDate.getDay(); 
-            
-            if (lowerSch.includes('daily')) return true;
-            if (lowerSch.includes(targetDayShort) || lowerSch.includes(targetDayLong)) return true;
-            if ((lowerSch.includes('mon to fri') || lowerSch.includes('mon-fri')) && targetDayNum >= 1 && targetDayNum <= 5) return true;
-            if (lowerSch.includes('first day of the month') && targetDate.getDate() === 1) return true;
-            return false;
+            document.getElementById('currentDateDisplay').innerText = `${dateStr} (IST)`;
         }
 
         function getColorForRegion(region) {
@@ -530,14 +479,11 @@
 
         function updateCurrentTimeMarker() {
             const now = luxon.DateTime.now().setZone('Asia/Kolkata');
-            const startOfTimeline = luxon.DateTime.fromJSDate(selectedDate).setZone('Asia/Kolkata').minus({days: 1}).startOf('day');
-            
-            const diffMinutes = now.diff(startOfTimeline, 'minutes').minutes;
+            const isToday = now.hasSame(luxon.DateTime.fromJSDate(selectedDate), 'day');
             const line = document.getElementById('currentTimeLine');
             
-            // Plot marker if Current Time falls anywhere within the 72-hour canvas
-            if (diffMinutes >= 0 && diffMinutes <= 4320) {
-                const percent = (diffMinutes / 4320) * 100;
+            if(isToday) {
+                const percent = ((now.hour * 60 + now.minute) / 1440) * 100;
                 const text = document.getElementById('currentTimeText');
                 line.style.left = `${percent}%`;
                 line.classList.remove('hidden');
@@ -548,74 +494,56 @@
         }
         setInterval(updateCurrentTimeMarker, 60000);
 
-        function renderAll(dataToRender) {
-            renderDateList(dataToRender);
-            renderMainList(dataToRender);
-            renderAdvancedGantt(dataToRender);
+        function renderAll() {
+            renderDateList();
+            renderMainList();
+            renderAdvancedGantt();
             updateCurrentTimeMarker();
-            centerTimeline();
         }
 
-        function renderDateList(data) {
+        function renderDateList() {
             const container = document.getElementById('dateJobsList');
             container.innerHTML = '';
-            const filteredJobs = data.filter(job => isRunningOnDate(job, selectedDate));
             
-            if(filteredJobs.length === 0) {
-                container.innerHTML = '<p class="text-sm text-slate-500 italic p-4">No jobs scheduled on this date for current filters.</p>';
+            if(compiledExecutions.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-500 italic p-4">No jobs executing in IST on this date.</p>';
                 return;
             }
             
-            filteredJobs.forEach(job => {
+            compiledExecutions.forEach(exec => {
+                const job = exec.job;
                 const color = getColorForRegion(job.region).replace('bg-', 'text-');
-                let displayTime = job.schedule;
-                const timeString = job.rule?.time || job.schedule;
                 
-                const istData = convertToIST(timeString, job.region, selectedDate);
-                if(istData) {
-                    const dayTag = istData.diffDays > 0 ? " (+1d)" : (istData.diffDays < 0 ? " (-1d)" : "");
-                    displayTime = `${istData.formatted} IST${dayTag}`;
-                }
-
                 container.innerHTML += `
-                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:border-blue-400 hover:shadow-md transition-all group" onclick='openDetailsById(${job.id})'>
+                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:border-blue-400 hover:shadow-md transition-all group" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})'>
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-xs font-black ${color}">${job.id}</span>
-                            <span class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-1 rounded-md tracking-wider border border-blue-100">${displayTime}</span>
+                            <span class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-1 rounded-md tracking-wider border border-blue-100">${exec.formattedIST} IST</span>
                         </div>
                         <div class="text-sm font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors">${job.name}</div>
-                        <div class="text-xs font-medium text-slate-500 truncate mt-1">${job.region}</div>
+                        <div class="text-[9px] font-bold text-slate-400 truncate mt-1">LOCAL: ${exec.localDateStr} @ ${exec.formattedLocal}</div>
                     </div>`;
             });
         }
 
-        function renderMainList(data) {
+        function renderMainList() {
             const container = document.getElementById('jobListContainer');
             container.innerHTML = '';
             
-            const filteredJobs = data.filter(job => isRunningOnDate(job, selectedDate));
-            
-            filteredJobs.forEach(job => {
-                let displayTime = job.schedule;
-                const timeString = job.rule?.time || job.schedule;
-                const istData = convertToIST(timeString, job.region, selectedDate);
-                if(istData) {
-                    const dayTag = istData.diffDays > 0 ? " (Next Day)" : (istData.diffDays < 0 ? " (Prev Day)" : "");
-                    displayTime = `${istData.formatted} IST ${dayTag}`;
-                }
-
+            compiledExecutions.forEach(exec => {
+                const job = exec.job;
                 container.innerHTML += `
                     <div class="relative pl-12">
                         <div class="absolute left-[21px] top-6 w-3.5 h-3.5 bg-blue-600 border-2 border-white rounded-full shadow-sm z-10"></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:shadow-md transition-all hover:border-blue-200" onclick='openDetailsById(${job.id})'>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:shadow-md transition-all hover:border-blue-200" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})'>
                             <div class="flex justify-between items-start mb-3">
                                 <div class="flex items-center gap-3">
                                     <span class="bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-md text-xs font-black tracking-wide">${job.id}</span>
                                     <h3 class="text-lg font-black text-slate-800">${job.name}</h3>
                                 </div>
                                 <div class="flex flex-col items-end gap-1">
-                                    <span class="text-sm font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">${displayTime}</span>
-                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Local: ${job.schedule}</span>
+                                    <span class="text-sm font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">${exec.formattedIST} IST</span>
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded">LOCAL: ${exec.localDateStr} @ ${exec.formattedLocal}</span>
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-4 text-sm text-slate-600 mb-3">
@@ -630,88 +558,39 @@
             });
         }
 
-        // Advanced 3-Day Gantt Renderer
-        function renderAdvancedGantt(data) {
+        function renderAdvancedGantt() {
             const labelsContainer = document.getElementById('ganttLabelsContainer');
             const barsContainer = document.getElementById('ganttBarsContainer');
-            
             labelsContainer.innerHTML = '';
             barsContainer.innerHTML = '';
-            
-            const baseDate = luxon.DateTime.fromJSDate(selectedDate);
-            const evalWindow = [
-                { offset: -1, date: baseDate.minus({days: 1}).toJSDate() }, 
-                { offset: 0, date: baseDate.toJSDate() },                   
-                { offset: 1, date: baseDate.plus({days: 1}).toJSDate() }    
-            ];
 
-            const uniqueJobsMap = new Map();
-
-            evalWindow.forEach(evalNode => {
-                const runningJobs = data.filter(job => isRunningOnDate(job, evalNode.date));
-                runningJobs.forEach(job => {
-                    if (!uniqueJobsMap.has(job.id)) {
-                        uniqueJobsMap.set(job.id, { job: job, executions: [] });
-                    }
-                    uniqueJobsMap.get(job.id).executions.push({ offset: evalNode.offset, date: evalNode.date });
-                });
-            });
-
-            const aggregatedJobs = Array.from(uniqueJobsMap.values());
-
-            aggregatedJobs.forEach(({job, executions}) => {
+            compiledExecutions.forEach(exec => {
+                const job = exec.job;
+                
                 const labelRow = document.createElement('div');
                 labelRow.className = 'gantt-row';
-                labelRow.innerHTML = `<span class="gantt-label cursor-pointer" onclick='openDetailsById(${job.id})'>${job.name}</span>`;
+                labelRow.innerHTML = `<span class="gantt-label cursor-pointer" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})'>${job.name}</span>`;
                 labelsContainer.appendChild(labelRow);
 
                 const barRow = document.createElement('div');
                 barRow.className = 'gantt-row';
                 
-                const timeString = job.rule?.time || job.schedule;
+                const leftPercent = (exec.sortMinutes / 1440) * 100;
+                const widthPercent = (45 / 1440) * 100; // ~45 mins block on 24h timeline
                 const colorClass = getColorForRegion(job.region);
-                const widthPercent = (45 / 4320) * 100; 
+                const hoverTitle = `${job.name} | ${exec.formattedIST} IST | Local: ${exec.formattedLocal} (${exec.localDateStr})`;
 
-                executions.forEach(exec => {
-                    const istData = convertToIST(timeString, job.region, exec.date);
-                    
-                    if (istData) {
-                        const absoluteDayOffset = exec.offset + istData.diffDays;
-                        
-                        if (absoluteDayOffset >= -1 && absoluteDayOffset <= 1) {
-                            const timelineDayIndex = absoluteDayOffset + 1; 
-                            const totalMinutes = (timelineDayIndex * 1440) + (istData.hours * 60) + istData.minutes;
-                            const leftPercent = (totalMinutes / 4320) * 100;
-                            
-                            let shiftClass = '';
-                            let shiftIndicator = '';
-                            let hoverTitle = `${job.name} | ${istData.formatted} IST | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
-
-                            if (istData.diffDays > 0) {
-                                shiftClass = 'bar-shift-next';
-                                shiftIndicator = `<span class="ml-1 text-[8px] bg-black/20 px-1 rounded">+1d</span>`;
-                                hoverTitle = `${job.name} | ${istData.formatted} IST (+1 Day shift) | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
-                            } else if (istData.diffDays < 0) {
-                                shiftClass = 'bar-shift-prev';
-                                shiftIndicator = `<span class="ml-1 text-[8px] bg-black/20 px-1 rounded">-1d</span>`;
-                                hoverTitle = `${job.name} | ${istData.formatted} IST (-1 Day shift) | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
-                            }
-
-                            barRow.innerHTML += `
-                                <div class="gantt-bar-wrapper">
-                                    <div class="gantt-bar ${colorClass} ${shiftClass}" style="left: ${leftPercent}%; width: ${widthPercent}%; min-width: 60px;" onclick='openDetailsById(${job.id})' title="${hoverTitle}">
-                                        ${job.id} ${shiftIndicator}
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    }
-                });
+                barRow.innerHTML = `
+                    <div class="gantt-bar-wrapper">
+                        <div class="gantt-bar ${colorClass}" style="left: ${leftPercent}%; width: ${widthPercent}%; min-width: 60px;" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})' title="${hoverTitle}">
+                            ${job.id}
+                        </div>
+                    </div>`;
                 barsContainer.appendChild(barRow);
             });
+            barsContainer.style.height = `${compiledExecutions.length * 48}px`; 
         }
 
-        // View Tabs Interactivity
         function switchTab(tabName) {
             const tabList = document.getElementById('tabList');
             const tabChart = document.getElementById('tabChart');
@@ -719,38 +598,28 @@
             const viewChart = document.getElementById('viewChart');
 
             if (tabName === 'list') {
-                viewList.classList.remove('hidden');
-                viewChart.classList.add('hidden');
+                viewList.classList.remove('hidden'); viewChart.classList.add('hidden');
                 tabList.className = "pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors";
                 tabChart.className = "pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors";
             } else {
-                viewList.classList.add('hidden');
-                viewChart.classList.remove('hidden');
+                viewList.classList.add('hidden'); viewChart.classList.remove('hidden');
                 tabChart.className = "pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors";
                 tabList.className = "pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors";
-                centerTimeline();
             }
         }
 
         function toggleModal(modalId) { document.getElementById(modalId).classList.toggle('modal-active'); }
-        function openDetailsById(id) { openDetails(jobsData.find(j => j.id === parseInt(id, 10))); }
         
-        function openDetails(job) {
+        function openDetailsByExecution(exec) {
+            const job = exec.job;
             document.getElementById('detId').innerText = `ID: ${job.id}`;
             document.getElementById('detName').innerText = job.name;
             document.getElementById('detRegion').innerText = job.region;
             document.getElementById('detBox').innerText = job.box;
-            document.getElementById('detSchedule').innerText = job.schedule;
             
-            const timeString = job.rule?.time || job.schedule;
-            const istData = convertToIST(timeString, job.region, selectedDate);
-            if(istData) {
-                const dayTag = istData.diffDays > 0 ? " (Next Day)" : (istData.diffDays < 0 ? " (Prev Day)" : "");
-                document.getElementById('detScheduleIST').innerText = `${istData.formatted} IST ${dayTag}`;
-            } else {
-                document.getElementById('detScheduleIST').innerText = "Time not parseable for conversion.";
-            }
-
+            document.getElementById('detScheduleLocal').innerText = `${exec.formattedLocal} (${job.schedule})`;
+            document.getElementById('detScheduleIST').innerText = `${exec.formattedIST} IST`;
+            
             document.getElementById('detAbap').innerText = job.abap;
             document.getElementById('detDependency').innerText = job.dependency;
             toggleModal('detailsModal');
@@ -759,24 +628,13 @@
         function handleAddJob(e) {
             e.preventDefault();
             const newJob = {
-                id: parseInt(document.getElementById('jobId').value, 10),
-                name: document.getElementById('jobName').value,
-                box: document.getElementById('jobBox').value,
-                region: document.getElementById('jobRegion').value,
-                abap: document.getElementById('jobAbap').value,
-                schedule: document.getElementById('jobSchedule').value,
+                id: parseInt(document.getElementById('jobId').value, 10), name: document.getElementById('jobName').value,
+                box: document.getElementById('jobBox').value, region: document.getElementById('jobRegion').value,
+                abap: document.getElementById('jobAbap').value, schedule: document.getElementById('jobSchedule').value,
                 dependency: document.getElementById('jobDependency').value
             };
-            
-            if (jobsData.some(j => j.id === newJob.id)) {
-                alert("A job with this ID already exists.");
-                return;
-            }
-            
-            jobsData.push(newJob);
-            saveJobs(); 
-            document.getElementById('addJobForm').reset();
-            toggleModal('addJobModal');
+            if (jobsData.some(j => j.id === newJob.id)) { alert("A job with this ID already exists."); return; }
+            jobsData.push(newJob); saveJobs(); document.getElementById('addJobForm').reset(); toggleModal('addJobModal');
         }
 
         // Initialization
