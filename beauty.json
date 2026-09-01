@@ -1,94 +1,730 @@
 [
-  { 
-    "id": 31566, 
-    "name": "ZW810_2D_NIDH", 
-    "box": "5972 (2) P33-APO-DP-MASTERDATA-BOX", 
-    "region": "HIBSA (FR, GR, CY, ES, PT)", 
-    "abap": "YWDT0060 (Variants: ZL810_ES...)", 
-    "schedule": "Daily 03:40", 
-    "rule": { "frequency": "daily", "time": "03:40" },
-    "dependency": "Parallel to 1st job" 
+  {
+    "id": 112362,
+    "name": "ZBWEUD_NIDH",
+    "box": "16062 P31-APO-DP-UK-MD-BOX",
+    "region": "B WEU",
+    "abap": "YWDT0060",
+    "schedule": "Mon to Fri 02:00 CET",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
+    "dependency": "Parallel to 1st job"
   },
-
-    { 
-    "id": 31566, 
-    "name": "test_Beauty", 
-    "box": "5972 (2) P33-APO-DP-MASTERDATA-BOX", 
-    "region": "HIBSA (FR, GR, CY, ES, PT)", 
-    "abap": "YWDT0060 (Variants: ZL810_ES...)", 
-    "schedule": "Daily 03:40", 
-    "rule": { "frequency": "daily", "time": "03:40" },
-    "dependency": "Parallel to 1st job" 
+  {
+    "id": 69430,
+    "name": "ZKSKPD_NIDH",
+    "box": "16062 P31-APO-DP-UK-MD-BOX",
+    "region": "UK SKP",
+    "abap": "YWDT0060",
+    "schedule": "Mon to Fri 02:00 CET",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
+    "dependency": "Parallel to 1st job"
   },
-
-  { 
-    "id": 37827, 
-    "name": "ZW001D2_NIDH", 
-    "box": "5972 (2) P33-APO-DP-MASTERDATA-BOX", 
-    "region": "001 PA (DE, UK, NO, BNL, CH)", 
-    "abap": "YWDT0060", 
-    "schedule": "Daily 04:00", 
-    "rule": { "frequency": "daily", "time": "04:00" },
-    "dependency": "Parallel to 1st job" 
+  {
+    "id": 112369,
+    "name": "ZBCEED_NIDH",
+    "box": "16062 P31-APO-DP-UK-MD-BOX",
+    "region": "B CEE",
+    "abap": "YWDT0060",
+    "schedule": "Mon to Fri 02:00 CET",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
+    "dependency": "Parallel to 1st job"
   },
-  { 
-    "id": 150486, 
-    "name": "ZLMEAD_NIDH", 
-    "box": "5972 (4) P33-APO-DP-MASTERDATA-BOX", 
-    "region": "MEA (Middle East & Africa)", 
-    "abap": "YWDT0060", 
-    "schedule": "Daily 05:30", 
-    "rule": { "frequency": "daily", "time": "05:30" },
-    "dependency": "Parallel to 1st job" 
+  {
+    "id": 147252,
+    "name": "ZBCISD_NIDH",
+    "box": "26573 P31-APO-DP-B-CIS-MD-BOX",
+    "region": "B CIS",
+    "abap": "YWDT0060",
+    "schedule": "Mon to Fri 02:00 CET",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
+    "dependency": "Parallel to 1st job"
   },
-  { 
-    "id": 110967, 
-    "name": "ZLCEED_NIDH", 
-    "box": "21068 P33-APO-DP-MASTERDATA-BOX(CEE)", 
-    "region": "CEE (Central & Eastern Europe)", 
-    "abap": "YWDT0060", 
-    "schedule": "Daily 01:00", 
-    "rule": { "frequency": "daily", "time": "01:00" },
-    "dependency": "Parallel to 1st job" 
+  {
+    "id": 147300,
+    "name": "ZBMEAD_NIDH",
+    "box": "26587 P31-APO-DP-B-MEA-MD-BOX",
+    "region": "B MEA",
+    "abap": "YWDT0060",
+    "schedule": "Mon to Fri 02:00 CET",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
+    "dependency": "Parallel to 1st job"
   },
-  { 
-    "id": 82739, 
-    "name": "ZWKORD_NIDH", 
-    "box": "18281 P33-APO-DP-KOREA-MASTERDATA-BOX", 
-    "region": "APAC / Korea (KR, TW, AU, NZ, CN)", 
-    "abap": "YWDT0060", 
-    "schedule": "Daily 03:40 KST", 
-    "rule": { "frequency": "daily", "time": "03:40" },
-    "dependency": "Parallel to 1st job" 
-  },
-  { 
-    "id": 108873, 
-    "name": "ZLNALD_NIDH", 
-    "box": "20797 P33-APO-DP-NA-MD-BOX", 
-    "region": "NA (North America)", 
-    "abap": "YWDT0060", 
-    "schedule": "Mon to Fri 05:00", 
+  {
+    "id": 84023,
+    "name": "ZKANZD_NIDH",
+    "box": "18350 P31-APO-DP-UK-ANZ-MD-BOX",
+    "region": "UK ANZ",
+    "abap": "YWDT0060",
+    "schedule": "Mon to Fri 05:00 AEST",
     "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "05:00" },
-    "dependency": "1st job" 
+    "dependency": "Parallel to 1st job"
   },
-  { 
-    "id": 24549, 
-    "name": "ZL000D_FCSTWS", 
-    "box": "24549 P33-APO-DP-L-FCSTWS-TZ1-BOX", 
-    "region": "WEU, CEE, MEA", 
-    "abap": "/SAPAPO/TS_BATCH_RUN", 
-    "schedule": "Weekly on Wednesdays 02:30", 
-    "rule": { "frequency": "weekly", "day": 3, "time": "02:30" },
-    "dependency": "1st job" 
+  {
+    "id": 84030,
+    "name": "ZKGCND_NIDH",
+    "box": "18351 P31-APO-DP-UK-GCN-BOX",
+    "region": "UK GCN",
+    "abap": "YWDT0060",
+    "schedule": "Mon to Fri 05:00 CST",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "05:00" },
+    "dependency": "Parallel to 1st job"
   },
-  { 
-    "id": 6136, 
-    "name": "P33-APO-DP-MFCSTSTORE-BOX", 
-    "box": "Monthly batch", 
-    "region": "DE, HI, IT, CEE, MEA", 
-    "abap": "/SAPAPO/TS_BATCH_RUN", 
-    "schedule": "First day of the month at 03:00", 
-    "rule": { "frequency": "monthly_start", "time": "03:00" },
-    "dependency": "1st job" 
+  {
+    "id": 108501,
+    "name": "ZBNABD_NIDH",
+    "box": "20766 P31-APO-DP-UK-NA-MD-BOX",
+    "region": "B NA",
+    "abap": "YWDT0060",
+    "schedule": "Mon to Fri 03:00 EST5EDT",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "03:00" },
+    "dependency": "Parallel to 1st job"
+  },
+  {
+    "id": 119308,
+    "name": "ZBLATD_NIDH",
+    "box": "22996 P31-APO-DP-B-LAT-MD-BOX",
+    "region": "B LAT",
+    "abap": "YWDT0060",
+    "schedule": "Mon to Fri 03:00 COT",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "03:00" },
+    "dependency": "Parallel to 1st job"
+  },
+
+
+
+  
+
+
+  {
+    "id": 112357,
+    "name": "ZBWEUD_DATA[cite: 2]",
+    "box": "16062 P31-APO-DP-UK-MD-BOX[cite: 2]",
+    "region": "B WEU[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "02:00"
+    },
+    "dependency": "Parallel to 1st job[cite: 2]"
+  },
+  {
+    "id": 69428,
+    "name": "ZKSKPD_DATA[cite: 2]",
+    "box": "16062 P31-APO-DP-UK-MD-BOX[cite: 2]",
+    "region": "UK SKP[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "02:00"
+    },
+    "dependency": "Parallel to 1st job[cite: 2]"
+  },
+  {
+    "id": 112368,
+    "name": "ZBCEED_DATA[cite: 2]",
+    "box": "16062 P31-APO-DP-UK-MD-BOX[cite: 2]",
+    "region": "B CEE[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "02:00"
+    },
+    "dependency": "Parallel to 1st job[cite: 2]"
+  },
+  {
+    "id": 67919,
+    "name": "ZK001D_DATA[cite: 2]",
+    "box": "16062 P31-APO-DP-UK-MD-BOX[cite: 2]",
+    "region": "DE[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "02:00"
+    },
+    "dependency": "AFTER SKP DATA job[cite: 2]"
+  },
+  {
+    "id": 147251,
+    "name": "ZBCISD_DATA[cite: 2]",
+    "box": "26573 P31-APO-DP-B-CIS-MD-BOX[cite: 2]",
+    "region": "B CIS[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "02:00"
+    },
+    "dependency": "Parallel to 1st job[cite: 2]"
+  },
+  {
+    "id": 147299,
+    "name": "ZBMEAD_DATA[cite: 2]",
+    "box": "26587 P31-APO-DP-B-MEA-MD-BOX[cite: 2]",
+    "region": "B MEA[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "02:00"
+    },
+    "dependency": "Parallel to 1st job[cite: 2]"
+  },
+  {
+    "id": 84022,
+    "name": "ZKANZD_DATA[cite: 2]",
+    "box": "18350 P31-APO-DP-UK-ANZ-MD-BOX[cite: 2]",
+    "region": "UK ANZ[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MO / TU / WED / THU / FRI  05:00 am AEST[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "05:00"
+    },
+    "dependency": "Parallel to 1st job[cite: 2]"
+  },
+  {
+    "id": 84029,
+    "name": "ZKGCND_DATA[cite: 2]",
+    "box": "18351 P31-APO-DP-UK-GCN-BOX[cite: 2]",
+    "region": "UK GCN[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MO / TU / WED / THU / FRI  05:00 am CST[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "05:00"
+    },
+    "dependency": "Parallel to 1st job[cite: 2]"
+  },
+  {
+    "id": 115333,
+    "name": "ZBNABD_DATA[cite: 2]",
+    "box": "22168 P31-APO-DP-UK-NA-MD2-BOX[cite: 2]",
+    "region": "B NA[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MON-FRI at 07:00 am EST5EDT[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "07:00"
+    },
+    "dependency": "1st job[cite: 2]"
+  },
+  {
+    "id": 119644,
+    "name": "ZBLATD_DATA[cite: 2]",
+    "box": "23102 P31-APO-DP-B-LAT-MD2-BOX[cite: 2]",
+    "region": "B LAT[cite: 2]",
+    "abap": "N/A",
+    "schedule": "MO / TU / WED / THU / FRI  03:00 am COT[cite: 2]",
+    "rule": {
+      "frequency": "weekdays",
+      "days": [1, 2, 3, 4, 5],
+      "time": "03:00"
+    },
+    "dependency": "1st job[cite: 2]"
+  },
+
+
+
+
+
+
+  {
+    "id": 104262,
+    "name": "ZBWEUD_PA_INIT",
+    "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
+    "region": "WEU Cosmetics",
+    "abap": "N/A",
+    "schedule": "First Wednesday of the month at 23:55 CET",
+    "rule": {
+      "frequency": "monthly_first_wednesday",
+      "time": "23:55"
+    },
+    "dependency": "First job"
+  },
+  {
+    "id": 69386,
+    "name": "ZKSKPD_PA_INIT",
+    "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
+    "region": "SKP Cosmetics",
+    "abap": "N/A",
+    "schedule": "First Wednesday of the month at 23:55 CET",
+    "rule": {
+      "frequency": "monthly_first_wednesday",
+      "time": "23:55"
+    },
+    "dependency": "Parallel to first job"
+  },
+  {
+    "id": 110725,
+    "name": "ZBCEED_PA_INIT",
+    "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
+    "region": "CEE Cosmetics",
+    "abap": "N/A",
+    "schedule": "First Wednesday of the month at 23:55 CET",
+    "rule": {
+      "frequency": "monthly_first_wednesday",
+      "time": "23:55"
+    },
+    "dependency": "Parallel to first job"
+  },
+  {
+    "id": 148367,
+    "name": "ZBCISD_PA_INIT",
+    "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
+    "region": "CIS Beauty",
+    "abap": "N/A",
+    "schedule": "First Wednesday of the month at 23:55 CET",
+    "rule": {
+      "frequency": "monthly_first_wednesday",
+      "time": "23:55"
+    },
+    "dependency": "Parallel to first job"
+  },
+  {
+    "id": 148368,
+    "name": "ZBMEAD_PA_INIT",
+    "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
+    "region": "MEA Beauty",
+    "abap": "N/A",
+    "schedule": "First Wednesday of the month at 23:55 CET",
+    "rule": {
+      "frequency": "monthly_first_wednesday",
+      "time": "23:55"
+    },
+    "dependency": "Parallel to first job"
+  },
+  {
+    "id": 83570,
+    "name": "ZKANZD_PA_INIT",
+    "box": "18338 P31-APO-DP-UK-APAC-ANZ-PAINIT-BOX",
+    "region": "APAC ANZ DP Cosmetics",
+    "abap": "N/A",
+    "schedule": "First Wednesday of the month at 23:55 AEST",
+    "rule": {
+      "frequency": "monthly_first_wednesday",
+      "time": "23:55"
+    },
+    "dependency": "First job"
+  },
+  {
+    "id": 83572,
+    "name": "ZKGCND_PA_INIT",
+    "box": "18339 P31-APO-DP-UK-APAC-GCN-PAINIT-BOX",
+    "region": "APAC GCN DP Cosmetics",
+    "abap": "N/A",
+    "schedule": "First Wednesday of the month at 23:55 CST",
+    "rule": {
+      "frequency": "monthly_first_wednesday",
+      "time": "23:55"
+    },
+    "dependency": "1st job"
+  },
+  {
+    "id": 108494,
+    "name": "ZBNABD_PA_INIT",
+    "box": "20765 P31-APO-DP-UK-NA-PAINIT-BOX",
+    "region": "NA DP Cosmetics",
+    "abap": "N/A",
+    "schedule": "First Wednesday of the month at 23:55 EST5EDT",
+    "rule": {
+      "frequency": "monthly_first_wednesday",
+      "time": "23:55"
+    },
+    "dependency": "First job"
+  },
+  {
+    "id": 119303,
+    "name": "ZBLATD_PA_INIT",
+    "box": "22995 P31-APO-DP-B-LAT-PAINIT-BOX",
+    "region": "LATAM DP Cosmetics",
+    "abap": "N/A",
+    "schedule": "First Wednesday of the month at 23:55 COT",
+    "rule": {
+      "frequency": "monthly_first_wednesday",
+      "time": "23:55"
+    },
+    "dependency": "First job"
+  },
+
+
+
+
+
+
+
+
+  {
+    "id": 143089,
+    "name": "ZKSKPD_HST_S01",
+    "box": "16584 P31-APO-DP-UK-SHIST-SKP-BOX",
+    "region": "UK SKP",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "1st job"
+  },
+  {
+    "id": 69435,
+    "name": "BI_BTCH_ZKSKPD_HST2",
+    "box": "16584 P31-APO-DP-UK-SHIST-SKP-BOX",
+    "region": "UK SKP",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZKSKPD_HST_S01"
+  },
+  {
+    "id": 69436,
+    "name": "ZKSKPD_HST_S03",
+    "box": "16584 P31-APO-DP-UK-SHIST-SKP-BOX",
+    "region": "UK SKP",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - BI_BTCH_ZKSKPD_HST2"
+  },
+  {
+    "id": 74585,
+    "name": "ZKSKPD_HST_S04",
+    "box": "16584 P31-APO-DP-UK-SHIST-SKP-BOX",
+    "region": "UK SKP",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZKSKPD_HST_S03"
+  },
+  {
+    "id": 111029,
+    "name": "ZBWEUD_HST_S01",
+    "box": "21100 P31-APO-DP-B-SHIST-WEU-BOX",
+    "region": "UK WEU",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "1st job"
+  },
+  {
+    "id": 111030,
+    "name": "BI_BTCH_ZBWEUD_HST2",
+    "box": "21100 P31-APO-DP-B-SHIST-WEU-BOX",
+    "region": "UK WEU",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBWEUD_HST_S01"
+  },
+  {
+    "id": 111032,
+    "name": "ZBWEUD_HST_S03",
+    "box": "21100 P31-APO-DP-B-SHIST-WEU-BOX",
+    "region": "UK WEU",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - BI_BTCH_ZBWEUD_HST2"
+  },
+  {
+    "id": 111033,
+    "name": "ZBWEUD_HST_S04",
+    "box": "21100 P31-APO-DP-B-SHIST-WEU-BOX",
+    "region": "UK WEU",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBWEUD_HST_S03"
+  },
+  {
+    "id": 112372,
+    "name": "ZBCEED_HST_S01",
+    "box": "21663 P31-APO-DP-UK-SHIST-CEE-BOX",
+    "region": "CEE",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "1st job"
+  },
+  {
+    "id": 112373,
+    "name": "BI_BTCH_ZBCEED_HST2",
+    "box": "21663 P31-APO-DP-UK-SHIST-CEE-BOX",
+    "region": "CEE",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBCEED_HST_S01"
+  },
+  {
+    "id": 112374,
+    "name": "ZBCEED_HST_S03",
+    "box": "21663 P31-APO-DP-UK-SHIST-CEE-BOX",
+    "region": "CEE",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - BI_BTCH_ZBCEED_HST2"
+  },
+  {
+    "id": 112375,
+    "name": "ZBCEED_HST_S04",
+    "box": "21663 P31-APO-DP-UK-SHIST-CEE-BOX",
+    "region": "CEE",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBCEED_HST_S03"
+  },
+  {
+    "id": 147254,
+    "name": "ZBCISD_HST_S01",
+    "box": "26574 P31-APO-DP-B-SHIST-CIS-BOX",
+    "region": "CIS",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "1st job"
+  },
+  {
+    "id": 147255,
+    "name": "BI_BTCH_ZBCISD_HST2",
+    "box": "26574 P31-APO-DP-B-SHIST-CIS-BOX",
+    "region": "CIS",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBCISD_HST_S01"
+  },
+  {
+    "id": 147257,
+    "name": "ZBCISD_HST_S03",
+    "box": "26574 P31-APO-DP-B-SHIST-CIS-BOX",
+    "region": "CIS",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - BI_BTCH_ZBCISD_HST2"
+  },
+  {
+    "id": 147258,
+    "name": "ZBCISD_HST_S04",
+    "box": "26574 P31-APO-DP-B-SHIST-CIS-BOX",
+    "region": "CIS",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBCISD_HST_S03"
+  },
+  {
+    "id": 147307,
+    "name": "ZBMEAD_HST_S01",
+    "box": "26591 P31-APO-DP-B-SHIST-MEA-BOX",
+    "region": "MEA",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "1st job"
+  },
+  {
+    "id": 147308,
+    "name": "BI_BTCH_ZBMEAD_HST2",
+    "box": "26591 P31-APO-DP-B-SHIST-MEA-BOX",
+    "region": "MEA",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBMEAD_HST_S01"
+  },
+  {
+    "id": 147310,
+    "name": "ZBMEAD_HST_S03",
+    "box": "26591 P31-APO-DP-B-SHIST-MEA-BOX",
+    "region": "MEA",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - BI_BTCH_ZBMEAD_HST2"
+  },
+  {
+    "id": 147311,
+    "name": "ZBMEAD_HST_S04",
+    "box": "26591 P31-APO-DP-B-SHIST-MEA-BOX",
+    "region": "MEA",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBMEAD_HST_S03"
+  },
+  {
+    "id": 84052,
+    "name": "ZKANZD_HST_S01",
+    "box": "18355 P31-APO-DP-UK-SHIST-ANZ-BOX",
+    "region": "ANZ",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "1st job"
+  },
+  {
+    "id": 84053,
+    "name": "BI_BTCH_ZKANZD_HST2",
+    "box": "18355 P31-APO-DP-UK-SHIST-ANZ-BOX",
+    "region": "ANZ",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZKANZD_HST_S01"
+  },
+  {
+    "id": 84054,
+    "name": "ZKANZD_HST_S03",
+    "box": "18355 P31-APO-DP-UK-SHIST-ANZ-BOX",
+    "region": "ANZ",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - BI_BTCH_ZKANZD_HST2"
+  },
+  {
+    "id": 84055,
+    "name": "ZKANZD_HST_S04",
+    "box": "18355 P31-APO-DP-UK-SHIST-ANZ-BOX",
+    "region": "ANZ",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZKANZD_HST_S03"
+  },
+  {
+    "id": 84067,
+    "name": "ZKGCND_HST_S01",
+    "box": "18361 P31-APO-DP-UK-SHIST-GCN-BOX",
+    "region": "GCN",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "1st job"
+  },
+  {
+    "id": 84068,
+    "name": "BI_BTCH_ZKGCND_HST2",
+    "box": "18361 P31-APO-DP-UK-SHIST-GCN-BOX",
+    "region": "GCN",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZKGCND_HST_S01"
+  },
+  {
+    "id": 84069,
+    "name": "ZKGCND_HST_S03",
+    "box": "18361 P31-APO-DP-UK-SHIST-GCN-BOX",
+    "region": "GCN",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - BI_BTCH_ZKGCND_HST2"
+  },
+  {
+    "id": 84070,
+    "name": "ZKGCND_HST_S04",
+    "box": "18361 P31-APO-DP-UK-SHIST-GCN-BOX",
+    "region": "GCN",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBCEED_HST_S03"
+  },
+  {
+    "id": 108505,
+    "name": "ZBNABD_HST_S01",
+    "box": "20769 P31-APO-DP-UK-SHIST-NA-BOX",
+    "region": "NAB",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "1st job"
+  },
+  {
+    "id": 127521,
+    "name": "BI_BTCH_ZBNABD_HST2",
+    "box": "20769 P31-APO-DP-UK-SHIST-NA-BOX",
+    "region": "NAB",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBNABD_HST_S01"
+  },
+  {
+    "id": 108508,
+    "name": "ZBNABD_HST_S03",
+    "box": "20769 P31-APO-DP-UK-SHIST-NA-BOX",
+    "region": "NAB",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - BI_BTCH_ZBNABD_HST2"
+  },
+  {
+    "id": 108509,
+    "name": "ZBNABD_HST_S04",
+    "box": "20769 P31-APO-DP-UK-SHIST-NA-BOX",
+    "region": "NAB",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBNABD_HST_S03"
+  },
+  {
+    "id": 119315,
+    "name": "ZBLATD_HST_S01",
+    "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
+    "region": "LAT",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "1st job"
+  },
+  {
+    "id": 119316,
+    "name": "BI_BTCH_ZBLATD_HST2",
+    "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
+    "region": "LAT",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBLATD_HST_S01"
+  },
+  {
+    "id": 119318,
+    "name": "ZBLATD_HST_S03",
+    "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
+    "region": "LAT",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - BI_BTCH_ZBLATD_HST2"
+  },
+  {
+    "id": 119319,
+    "name": "ZBLATD_HST_S04",
+    "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
+    "region": "LAT",
+    "abap": "N/A",
+    "schedule": "Mon to Fri",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
+    "dependency": "After job - ZBLATD_HST_S03"
   }
+  
 ]
