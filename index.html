@@ -261,6 +261,31 @@
             }
         }
 
+        // Helper to extract a short Region code (e.g. MEA, SKP, WEU) from full region string
+        function getShortRegionCode(region) {
+            if (!region) return '';
+            const r = region.toUpperCase();
+            if (r.includes('SKP')) return 'SKP';
+            if (r.includes('WEU')) return 'WEU';
+            if (r.includes('CEE')) return 'CEE';
+            if (r.includes('CIS')) return 'CIS';
+            if (r.includes('MEA')) return 'MEA';
+            if (r.includes('ANZ')) return 'ANZ';
+            if (r.includes('GCN')) return 'GCN';
+            if (r.includes('APAC')) return 'APAC';
+            if (r.includes('LAT')) return 'LAT';
+            if (r.includes('KOR')) return 'KOR';
+            if (r.includes('HIBSA')) return 'HIBSA';
+            if (r.includes('NA ') || r.includes('NAB') || r.includes('L NA')) return 'NA';
+            
+            // Extract first significant word if no standard match
+            const parts = region.split(' ');
+            const first = parts[0].replace(/[^A-Z0-9]/g, '');
+            if (first.length > 0 && first !== 'B' && first !== 'UK' && first !== 'L') return first;
+            if (parts.length > 1) return parts[1].replace(/[^A-Z0-9]/g, '');
+            return first;
+        }
+
         // Timezone Mapping
         function getRegionTimezone(region) {
             if (!region) return 'Europe/Berlin'; 
@@ -347,6 +372,7 @@
                                 formattedIST: istExecution.toFormat('HH:mm'),
                                 formattedLocal: localExecution.toFormat('HH:mm'),
                                 localDateStr: localExecution.toFormat('cccc, LLL d'),
+                                shortRegion: getShortRegionCode(job.region),
                                 sortMinutes: (istExecution.hour * 60) + istExecution.minute
                             });
                         }
@@ -523,7 +549,7 @@
                             <span class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-1 rounded-md tracking-wider border border-blue-100">${exec.formattedIST} IST</span>
                         </div>
                         <div class="text-sm font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors">${job.name}</div>
-                        <div class="text-[9px] font-bold text-slate-400 truncate mt-1">LOCAL: ${exec.localDateStr} @ ${exec.formattedLocal}</div>
+                        <div class="text-[9px] font-bold text-slate-400 truncate mt-1">LOCAL: ${exec.localDateStr} @ ${exec.formattedLocal} ${exec.shortRegion}</div>
                     </div>`;
             });
         }
@@ -545,7 +571,7 @@
                                 </div>
                                 <div class="flex flex-col items-end gap-1">
                                     <span class="text-sm font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">${exec.formattedIST} IST</span>
-                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded">LOCAL: ${exec.localDateStr} @ ${exec.formattedLocal}</span>
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded">LOCAL: ${exec.localDateStr} @ ${exec.formattedLocal} ${exec.shortRegion}</span>
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-4 text-sm text-slate-600 mb-3">
@@ -580,7 +606,7 @@
                 const leftPercent = (exec.sortMinutes / 1440) * 100;
                 const widthPercent = (45 / 1440) * 100; // ~45 mins block on 24h timeline
                 const colorClass = getColorForRegion(job.region);
-                const hoverTitle = `${job.name} | ${exec.formattedIST} IST | Local: ${exec.formattedLocal} (${exec.localDateStr})`;
+                const hoverTitle = `${job.name} | ${exec.formattedIST} IST | Local: ${exec.formattedLocal} ${exec.shortRegion} (${exec.localDateStr})`;
 
                 barRow.innerHTML = `
                     <div class="gantt-bar-wrapper">
@@ -619,7 +645,7 @@
             document.getElementById('detRegion').innerText = job.region;
             document.getElementById('detBox').innerText = job.box;
             
-            document.getElementById('detScheduleLocal').innerText = `${exec.formattedLocal} (${job.schedule})`;
+            document.getElementById('detScheduleLocal').innerText = `${exec.formattedLocal} ${exec.shortRegion} (${job.schedule})`;
             document.getElementById('detScheduleIST').innerText = `${exec.formattedIST} IST`;
             
             document.getElementById('detAbap').innerText = job.abap;
