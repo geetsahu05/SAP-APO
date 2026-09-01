@@ -3,38 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APO DP Batch Monitor (Dynamic IST Timeline)</title>
+    <title>APO DP Batch Monitor (3-Day IST Timeline)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
     <style>
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar { height: 10px; width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; border: 2px solid #f1f5f9; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
         .modal-active { display: flex !important; }
         
-        /* Dynamic Timeline Styles */
-        .gantt-wrapper { display: flex; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #fff; }
-        .gantt-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #e2e8f0; background: #f8fafc; z-index: 20; box-shadow: 2px 0 5px rgba(0,0,0,0.02); }
-        .gantt-timeline-container { flex-grow: 1; overflow-x: auto; position: relative; }
-        .gantt-timeline-inner { min-width: 1440px; position: relative; } /* 60px minimum per hour */
+        .gantt-wrapper { display: flex; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #fff; height: 100%; }
+        .gantt-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #e2e8f0; background: #f8fafc; z-index: 30; box-shadow: 2px 0 5px rgba(0,0,0,0.05); position: relative;}
         
-        .gantt-header { display: flex; border-bottom: 1px solid #e2e8f0; height: 40px; background: #f8fafc; align-items: center; position: sticky; top: 0; z-index: 15;}
-        .gantt-header-cell { font-size: 0.7rem; font-weight: 700; color: #64748b; text-align: center; border-right: 1px dashed #e2e8f0; flex: 1; display: flex; justify-content: center; align-items: center;}
+        /* Smooth scrolling container */
+        .gantt-timeline-container { flex-grow: 1; overflow-x: auto; overflow-y: hidden; position: relative; scroll-behavior: smooth; }
+        
+        /* Expanded to 72 Hours (3 Days) */
+        .gantt-timeline-inner { min-width: 3600px; position: relative; height: 100%; }
+        
+        .gantt-header { display: flex; border-bottom: 1px solid #e2e8f0; height: 40px; background: #f8fafc; align-items: center; position: sticky; top: 0; z-index: 20;}
+        .gantt-header-cell { font-size: 0.65rem; font-weight: 700; color: #64748b; text-align: center; border-right: 1px dashed #e2e8f0; flex: 1; display: flex; justify-content: center; align-items: center;}
         .gantt-header-cell:last-child { border-right: none; }
         
-        .gantt-grid { position: absolute; top: 40px; bottom: 0; left: 0; right: 0; display: flex; pointer-events: none; z-index: 0; }
-        .gantt-grid-line { flex: 1; border-right: 1px dashed #e2e8f0; }
+        .gantt-grid { position: absolute; top: 40px; bottom: 0; left: 0; right: 0; display: flex; pointer-events: none; z-index: 10; }
+        .gantt-grid-line { flex: 1; border-right: 1px dashed rgba(226, 232, 240, 0.6); }
         .gantt-grid-line:last-child { border-right: none; }
         
         .gantt-row { display: flex; align-items: center; height: 48px; border-bottom: 1px solid #f1f5f9; position: relative; }
-        .gantt-row:hover { background: #f8fafc; }
+        .gantt-row:hover { background: rgba(248, 250, 252, 0.5); }
         
         .gantt-label { padding: 0 16px; font-size: 0.75rem; font-weight: 600; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; display: block; }
         
-        .gantt-bar-wrapper { position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 10; pointer-events: none; }
-        .gantt-bar { position: absolute; top: 10px; height: 28px; border-radius: 6px; color: white; font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; padding: 0 8px; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); pointer-events: auto; overflow: hidden; text-overflow: ellipsis; border: 1px solid rgba(255,255,255,0.2); }
+        .gantt-bar-wrapper { position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 15; pointer-events: none; }
+        .gantt-bar { position: absolute; top: 10px; height: 28px; border-radius: 6px; color: white; font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; justify-content: center; padding: 0 8px; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); pointer-events: auto; overflow: hidden; text-overflow: ellipsis; border: 1px solid rgba(255,255,255,0.2); }
         .gantt-bar:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); filter: brightness(1.1); z-index: 30; outline: 2px solid #fff; }
         
         /* Day Shift Patterns */
@@ -42,7 +45,7 @@
         .bar-shift-prev { background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,0.1) 0, rgba(0,0,0,0.1) 4px, transparent 4px, transparent 8px); }
         
         .current-time-line { position: absolute; top: 0; bottom: 0; width: 2px; background-color: #ef4444; z-index: 25; pointer-events: none; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
-        .current-time-marker { position: absolute; top: 0; left: -24px; background: #ef4444; color: #fff; font-size: 0.65rem; padding: 3px 8px; border-radius: 0 0 6px 6px; font-weight: 800; width: 50px; text-align: center; border: 1px solid #dc2626; border-top: none; }
+        .current-time-marker { position: absolute; top: 40px; left: -24px; background: #ef4444; color: #fff; font-size: 0.65rem; padding: 3px 8px; border-radius: 0 0 6px 6px; font-weight: 800; width: 50px; text-align: center; border: 1px solid #dc2626; border-top: none; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans h-screen flex flex-col overflow-hidden">
@@ -51,7 +54,7 @@
         <div class="flex items-center gap-6">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold shadow-md">APO</div>
-                <h1 class="text-xl font-bold text-slate-800 tracking-tight">Batch Scheduler (IST)</h1>
+                <h1 class="text-xl font-bold text-slate-800 tracking-tight">Batch Scheduler</h1>
             </div>
             
             <div class="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
@@ -88,7 +91,7 @@
             <div class="flex px-8 pt-5 gap-8 border-b border-slate-200 bg-white shrink-0 justify-between items-center">
                 <div class="flex gap-8">
                     <button onclick="switchTab('list')" id="tabList" class="pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors">Sequence List</button>
-                    <button onclick="switchTab('chart')" id="tabChart" class="pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">Detailed Timeline</button>
+                    <button onclick="switchTab('chart')" id="tabChart" class="pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">3-Day Continuous Timeline (IST)</button>
                 </div>
                 <div class="flex gap-2 pb-3 items-center">
                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider mr-2">Tags:</span>
@@ -104,27 +107,34 @@
                 </div>
             </div>
 
-            <div id="viewChart" class="flex-1 overflow-y-auto p-8">
-                <div class="gantt-wrapper shadow-sm">
-                    <div class="gantt-sidebar">
+            <div id="viewChart" class="flex-1 overflow-hidden p-8 flex flex-col">
+                <div class="mb-3 flex justify-between items-center w-full px-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    <button onclick="scrollTimeline(-1)" class="hover:text-blue-600 transition-colors flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Scroll Prev Day</button>
+                    <button onclick="centerTimeline()" class="bg-white border border-slate-200 px-3 py-1 rounded-full shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors">Center to Selected Date</button>
+                    <button onclick="scrollTimeline(1)" class="hover:text-blue-600 transition-colors flex items-center gap-1">Scroll Next Day <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                </div>
+                
+                <div class="gantt-wrapper shadow-sm flex-1">
+                    <div class="gantt-sidebar flex flex-col">
                         <div class="gantt-header border-r border-slate-200 px-4">
                             <span class="text-xs font-bold text-slate-500 uppercase">Batch Process / Job Name</span>
                         </div>
-                        <div id="ganttLabelsContainer" class="bg-white pb-4"></div>
+                        <div id="ganttLabelsContainer" class="bg-white pb-4 overflow-y-auto flex-1 custom-scroll"></div>
                     </div>
                     
                     <div class="gantt-timeline-container" id="timelineScrollContainer">
                         <div class="gantt-timeline-inner" id="ganttTimelineInner">
-                            <div class="gantt-header" id="ganttTimeHeaders">
-                                <!-- Populated dynamically by JS -->
-                            </div>
-                            <div class="gantt-grid" id="ganttGridLines">
-                                <!-- Populated dynamically by JS -->
-                            </div>
+                            <!-- Background Day Zones -->
+                            <div id="ganttBackgrounds"></div>
+                            
+                            <div class="gantt-header" id="ganttTimeHeaders"></div>
+                            <div class="gantt-grid" id="ganttGridLines"></div>
+                            
                             <div id="currentTimeLine" class="current-time-line hidden">
                                 <div class="current-time-marker" id="currentTimeText"></div>
                             </div>
-                            <div id="ganttBarsContainer" class="pb-4 relative z-10"></div>
+                            
+                            <div id="ganttBarsContainer" class="pb-4 relative z-20 overflow-y-hidden"></div>
                         </div>
                     </div>
                 </div>
@@ -132,7 +142,7 @@
         </main>
     </div>
 
-    <!-- Modals -->
+    <!-- Modals (Add / Edit) -->
     <div id="addJobModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
             <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
@@ -180,6 +190,7 @@
         </div>
     </div>
 
+    <!-- Details Modal -->
     <div id="detailsModal" class="fixed inset-0 bg-slate-900/40 hidden justify-end z-50 transition-opacity backdrop-blur-sm">
         <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col transform translate-x-0 border-l border-slate-200">
             <div class="px-6 py-6 border-b border-slate-100 bg-white flex justify-between items-start">
@@ -224,36 +235,74 @@
         let jobsData = [];
         let selectedDate = new Date();
         let activeKeywords = [];
+        let scrollTimeout;
 
-        // Dynamic Grid Generator (24 Hours)
+        // Dynamic 72-Hour Grid Generator
         function generateGanttGrid() {
             const headersContainer = document.getElementById('ganttTimeHeaders');
             const gridContainer = document.getElementById('ganttGridLines');
+            const bgContainer = document.getElementById('ganttBackgrounds');
             
             headersContainer.innerHTML = '';
             gridContainer.innerHTML = '';
             
-            for(let i = 0; i < 24; i++) {
-                const hourString = i.toString().padStart(2, '0');
+            // 3-Day Background Theme setup
+            bgContainer.innerHTML = `
+                <div class="absolute top-0 bottom-0 left-0 w-[33.333%] bg-slate-200/40 border-r-4 border-slate-300 z-0 flex justify-center"><span class="text-[10px] font-bold text-slate-400 opacity-60 uppercase tracking-widest mt-12 bg-white/50 px-3 py-1 rounded-full shadow-sm backdrop-blur-sm">Previous Day</span></div>
+                <div class="absolute top-0 bottom-0 left-[33.333%] w-[33.333%] bg-white border-r-4 border-slate-300 z-0 flex justify-center"><span class="text-[10px] font-bold text-blue-500 opacity-80 uppercase tracking-widest mt-12 bg-blue-50 px-3 py-1 rounded-full shadow-sm border border-blue-100">Selected Date</span></div>
+                <div class="absolute top-0 bottom-0 left-[66.666%] w-[33.333%] bg-blue-50/40 z-0 flex justify-center"><span class="text-[10px] font-bold text-blue-400 opacity-60 uppercase tracking-widest mt-12 bg-white/50 px-3 py-1 rounded-full shadow-sm backdrop-blur-sm">Next Day</span></div>
+            `;
+
+            for(let i = 0; i < 72; i++) {
+                const hourString = (i % 24).toString().padStart(2, '0');
                 
-                // Add Header
+                // Header (Rendered every 2 hours to avoid cluttering at 3600px width)
                 const headerCell = document.createElement('div');
                 headerCell.className = 'gantt-header-cell';
-                headerCell.innerText = `${hourString}:00`;
+                if (i % 2 === 0) {
+                    headerCell.innerText = `${hourString}:00`;
+                }
                 headersContainer.appendChild(headerCell);
                 
-                // Add Grid Line
+                // Grid Lines
                 const gridLine = document.createElement('div');
                 gridLine.className = 'gantt-grid-line';
                 gridContainer.appendChild(gridLine);
             }
         }
 
-        // Timezone Mapping based on System Regions
+        function scrollTimeline(direction) {
+            const container = document.getElementById('timelineScrollContainer');
+            const segmentWidth = container.scrollWidth / 3;
+            container.scrollBy({ left: segmentWidth * direction, behavior: 'smooth' });
+        }
+
+        function centerTimeline() {
+            const container = document.getElementById('timelineScrollContainer');
+            // Wait slightly if UI just rendered to ensure scrollWidth is accurate
+            setTimeout(() => {
+                const targetScroll = (container.scrollWidth / 3) - 20; // Slight offset for visibility
+                container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+            }, 50);
+        }
+
+        // Sync vertical scroll between Labels sidebar and Timeline Grid
+        const labelsContainer = document.getElementById('ganttLabelsContainer');
+        const barsContainer = document.getElementById('ganttBarsContainer');
+        
+        labelsContainer.addEventListener('scroll', () => {
+            barsContainer.scrollTop = labelsContainer.scrollTop;
+        });
+        
+        barsContainer.addEventListener('wheel', (e) => {
+            labelsContainer.scrollTop += e.deltaY;
+            e.preventDefault();
+        });
+
+        // Timezone Mapping
         function getRegionTimezone(region) {
             if (!region) return 'Europe/Berlin'; 
             const r = region.toLowerCase();
-            
             if (r.includes('weu') || r.includes('cee') || r.includes('hibsa') || r.includes('de') || r.includes('uk') || r.includes('skp')) return 'Europe/Berlin'; 
             if (r.includes('cis')) return 'Europe/Moscow';
             if (r.includes('mea') || r.includes('bmea')) return 'Asia/Dubai';
@@ -262,11 +311,10 @@
             if (r.includes('korea') || r.includes('kst')) return 'Asia/Seoul';
             if (r.includes('anz') || r.includes('aest')) return 'Australia/Sydney';
             if (r.includes('gcn') || r.includes('cst') || r.includes('apac')) return 'Asia/Shanghai'; 
-            
             return 'Europe/Berlin'; 
         }
 
-        function convertToIST(timeString, region) {
+        function convertToIST(timeString, region, evalDate) {
             if (!timeString) return null;
             const match = timeString.match(/(\d{2}):(\d{2})/);
             if (!match) return null;
@@ -275,24 +323,31 @@
             const minutes = parseInt(match[2], 10);
             const sourceTimezone = getRegionTimezone(region);
             
+            // Create time based on the SPECIFIC evaluation date to accurately catch DST
             const regionalTime = luxon.DateTime.fromObject({
-                year: selectedDate.getFullYear(),
-                month: selectedDate.getMonth() + 1,
-                day: selectedDate.getDate(),
+                year: evalDate.getFullYear(),
+                month: evalDate.getMonth() + 1,
+                day: evalDate.getDate(),
                 hour: hours,
                 minute: minutes
             }, { zone: sourceTimezone });
 
             const istTime = regionalTime.setZone('Asia/Kolkata');
+            
+            // Determine if the conversion pushed the local job execution into the next or previous day
+            let diffDays = 0;
+            if (istTime.hasSame(regionalTime.plus({days: 1}), 'day')) diffDays = 1;
+            if (istTime.hasSame(regionalTime.minus({days: 1}), 'day')) diffDays = -1;
+
             return {
                 hours: istTime.hour,
                 minutes: istTime.minute,
                 formatted: istTime.toFormat('HH:mm'),
-                diffDays: istTime.day - regionalTime.day 
+                diffDays: diffDays 
             };
         }
 
-        // Dynamic Keyword Tag Logic
+        // Keyword Filtering
         document.getElementById('customKeywordInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -325,7 +380,7 @@
             });
         }
 
-        // Core Data Loader
+        // Data Management
         async function loadSectorData() {
             const storageKey = `apoJobs_${currentSector}`;
             const fileName = `./${currentSector}.json`;
@@ -354,7 +409,6 @@
             applyFilters();
         }
 
-        // Sector Switcher
         function switchSector(sector) {
             currentSector = sector;
             const btnActive = "px-5 py-1.5 text-sm font-bold rounded-md bg-white shadow-sm text-blue-600 transition-all";
@@ -374,10 +428,8 @@
             loadSectorData();
         }
 
-        // Filter Logic (Search + Dynamic Keywords)
         function applyFilters() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            
             const filteredData = jobsData.filter(job => {
                 const matchesSearch = (job.name && job.name.toLowerCase().includes(query)) || 
                                       (job.id && job.id.toString().includes(query)) ||
@@ -389,10 +441,8 @@
                     (job.box && job.box.toLowerCase().includes(kw)) ||
                     (job.abap && job.abap.toLowerCase().includes(kw))
                 );
-                
                 return matchesSearch && matchesKeywords;
             });
-            
             renderAll(filteredData);
         }
 
@@ -423,7 +473,6 @@
             document.getElementById('currentDateDisplay').innerText = dateStr;
         }
 
-        // Schedule Evaluators
         function isRunningOnDate(job, targetDate) {
             if (!job.rule) return isRunningOnLegacyString(job.schedule, targetDate);
 
@@ -454,11 +503,9 @@
             if (lowerSch.includes(targetDayShort) || lowerSch.includes(targetDayLong)) return true;
             if ((lowerSch.includes('mon to fri') || lowerSch.includes('mon-fri')) && targetDayNum >= 1 && targetDayNum <= 5) return true;
             if (lowerSch.includes('first day of the month') && targetDate.getDate() === 1) return true;
-            
             return false;
         }
 
-        // Render Helpers
         function getColorForRegion(region) {
             if (!region) return 'bg-blue-500';
             const r = region.toLowerCase();
@@ -473,23 +520,18 @@
 
         function updateCurrentTimeMarker() {
             const now = luxon.DateTime.now().setZone('Asia/Kolkata');
-            const isToday = now.toISODate() === luxon.DateTime.fromJSDate(selectedDate).toISODate();
+            const startOfTimeline = luxon.DateTime.fromJSDate(selectedDate).setZone('Asia/Kolkata').minus({days: 1}).startOf('day');
+            
+            const diffMinutes = now.diff(startOfTimeline, 'minutes').minutes;
             const line = document.getElementById('currentTimeLine');
             
-            if(isToday) {
-                const minutesSinceMidnight = (now.hour * 60) + now.minute;
-                const percent = (minutesSinceMidnight / 1440) * 100;
+            // Plot marker if Current Time falls anywhere within the 72-hour canvas
+            if (diffMinutes >= 0 && diffMinutes <= 4320) {
+                const percent = (diffMinutes / 4320) * 100;
                 const text = document.getElementById('currentTimeText');
                 line.style.left = `${percent}%`;
                 line.classList.remove('hidden');
                 text.innerText = now.toFormat('HH:mm');
-                
-                // Auto-scroll timeline to current time if visible
-                const container = document.getElementById('timelineScrollContainer');
-                if(!container.classList.contains('hidden') && percent > 10) {
-                    const scrollTarget = (container.scrollWidth * (percent / 100)) - (container.clientWidth / 2);
-                    container.scrollTo({ left: scrollTarget, behavior: 'smooth' });
-                }
             } else {
                 line.classList.add('hidden');
             }
@@ -501,12 +543,12 @@
             renderMainList(dataToRender);
             renderAdvancedGantt(dataToRender);
             updateCurrentTimeMarker();
+            centerTimeline();
         }
 
         function renderDateList(data) {
             const container = document.getElementById('dateJobsList');
             container.innerHTML = '';
-            
             const filteredJobs = data.filter(job => isRunningOnDate(job, selectedDate));
             
             if(filteredJobs.length === 0) {
@@ -519,7 +561,7 @@
                 let displayTime = job.schedule;
                 const timeString = job.rule?.time || job.schedule;
                 
-                const istData = convertToIST(timeString, job.region);
+                const istData = convertToIST(timeString, job.region, selectedDate);
                 if(istData) {
                     const dayTag = istData.diffDays > 0 ? " (+1d)" : (istData.diffDays < 0 ? " (-1d)" : "");
                     displayTime = `${istData.formatted} IST${dayTag}`;
@@ -540,11 +582,13 @@
         function renderMainList(data) {
             const container = document.getElementById('jobListContainer');
             container.innerHTML = '';
-            data.forEach(job => {
-                
+            
+            const filteredJobs = data.filter(job => isRunningOnDate(job, selectedDate));
+            
+            filteredJobs.forEach(job => {
                 let displayTime = job.schedule;
                 const timeString = job.rule?.time || job.schedule;
-                const istData = convertToIST(timeString, job.region);
+                const istData = convertToIST(timeString, job.region, selectedDate);
                 if(istData) {
                     const dayTag = istData.diffDays > 0 ? " (Next Day)" : (istData.diffDays < 0 ? " (Prev Day)" : "");
                     displayTime = `${istData.formatted} IST ${dayTag}`;
@@ -576,14 +620,35 @@
             });
         }
 
+        // Advanced 3-Day Gantt Renderer
         function renderAdvancedGantt(data) {
-            const labelsContainer = document.getElementById('ganttLabelsContainer');
-            const barsContainer = document.getElementById('ganttBarsContainer');
-            
             labelsContainer.innerHTML = '';
             barsContainer.innerHTML = '';
+            
+            // Step 1: Identify all unique jobs running within the 3-day window
+            const baseDate = luxon.DateTime.fromJSDate(selectedDate);
+            const evalWindow = [
+                { offset: -1, date: baseDate.minus({days: 1}).toJSDate() }, // Prev Day
+                { offset: 0, date: baseDate.toJSDate() },                   // Selected Day
+                { offset: 1, date: baseDate.plus({days: 1}).toJSDate() }    // Next Day
+            ];
 
-            data.forEach(job => {
+            const uniqueJobsMap = new Map();
+
+            evalWindow.forEach(evalNode => {
+                const runningJobs = data.filter(job => isRunningOnDate(job, evalNode.date));
+                runningJobs.forEach(job => {
+                    if (!uniqueJobsMap.has(job.id)) {
+                        uniqueJobsMap.set(job.id, { job: job, executions: [] });
+                    }
+                    uniqueJobsMap.get(job.id).executions.push({ offset: evalNode.offset, date: evalNode.date });
+                });
+            });
+
+            const aggregatedJobs = Array.from(uniqueJobsMap.values());
+
+            // Step 2: Plot the Rows and Multi-day Bars
+            aggregatedJobs.forEach(({job, executions}) => {
                 const labelRow = document.createElement('div');
                 labelRow.className = 'gantt-row';
                 labelRow.innerHTML = `<span class="gantt-label cursor-pointer" onclick='openDetailsById(${job.id})'>${job.name}</span>`;
@@ -593,42 +658,57 @@
                 barRow.className = 'gantt-row';
                 
                 const timeString = job.rule?.time || job.schedule;
-                const istData = convertToIST(timeString, job.region);
-                
-                let leftPercent = 0;
-                let widthPercent = 3.125; // Default approx 45 mins width
-                let hoverTitle = `${job.name} (No valid time extracted)`;
-                let shiftClass = '';
-                let shiftIndicator = '';
-                
-                if (istData) {
-                    const totalMinutes = (istData.hours * 60) + istData.minutes;
-                    leftPercent = (totalMinutes / 1440) * 100;
-                    
-                    if (istData.diffDays > 0) {
-                        shiftClass = 'bar-shift-next';
-                        shiftIndicator = `<span class="ml-1 text-[8px] bg-black/20 px-1 rounded">+1d</span>`;
-                        hoverTitle = `${job.name} | ${istData.formatted} IST (+1 Day) | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
-                    } else if (istData.diffDays < 0) {
-                        shiftClass = 'bar-shift-prev';
-                        shiftIndicator = `<span class="ml-1 text-[8px] bg-black/20 px-1 rounded">-1d</span>`;
-                        hoverTitle = `${job.name} | ${istData.formatted} IST (-1 Day) | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
-                    } else {
-                        hoverTitle = `${job.name} | ${istData.formatted} IST | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
-                    }
-                }
-
                 const colorClass = getColorForRegion(job.region);
+                const widthPercent = (45 / 4320) * 100; // Default approx 45 mins block on a 4320 min canvas
 
-                barRow.innerHTML = `
-                    <div class="gantt-bar-wrapper">
-                        <div class="gantt-bar ${colorClass} ${shiftClass}" style="left: ${leftPercent}%; width: ${widthPercent}%; min-width: 60px;" onclick='openDetailsById(${job.id})' title="${hoverTitle}">
-                            ${job.id} ${shiftIndicator}
-                        </div>
-                    </div>
-                `;
+                // Plot each occurrence of the job across the 3 days
+                executions.forEach(exec => {
+                    const istData = convertToIST(timeString, job.region, exec.date);
+                    
+                    if (istData) {
+                        // Math: Where does this bar land on the 72h canvas?
+                        // canvas starts at offset -1 (Prev Day)
+                        // Local offset + IST Diff determines final conceptual day
+                        const absoluteDayOffset = exec.offset + istData.diffDays;
+                        
+                        // Only render if it actually falls within the visual -1 to 1 window
+                        if (absoluteDayOffset >= -1 && absoluteDayOffset <= 1) {
+                            // Convert Day Offset to mathematical index (0=Prev, 1=Selected, 2=Next)
+                            const timelineDayIndex = absoluteDayOffset + 1; 
+                            const totalMinutes = (timelineDayIndex * 1440) + (istData.hours * 60) + istData.minutes;
+                            const leftPercent = (totalMinutes / 4320) * 100;
+                            
+                            let shiftClass = '';
+                            let shiftIndicator = '';
+                            let hoverTitle = `${job.name} | ${istData.formatted} IST | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
+
+                            // Shift Patterns
+                            if (istData.diffDays > 0) {
+                                shiftClass = 'bar-shift-next';
+                                shiftIndicator = `<span class="ml-1 text-[8px] bg-black/20 px-1 rounded">+1d</span>`;
+                                hoverTitle = `${job.name} | ${istData.formatted} IST (+1 Day shift) | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
+                            } else if (istData.diffDays < 0) {
+                                shiftClass = 'bar-shift-prev';
+                                shiftIndicator = `<span class="ml-1 text-[8px] bg-black/20 px-1 rounded">-1d</span>`;
+                                hoverTitle = `${job.name} | ${istData.formatted} IST (-1 Day shift) | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
+                            }
+
+                            // Inject Bar instance
+                            barRow.innerHTML += `
+                                <div class="gantt-bar-wrapper">
+                                    <div class="gantt-bar ${colorClass} ${shiftClass}" style="left: ${leftPercent}%; width: ${widthPercent}%; min-width: 60px;" onclick='openDetailsById(${job.id})' title="${hoverTitle}">
+                                        ${job.id} ${shiftIndicator}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                });
                 barsContainer.appendChild(barRow);
             });
+            
+            // Auto align height if bars spill over
+            barsContainer.style.height = `${aggregatedJobs.length * 48}px`; 
         }
 
         // View Tabs Interactivity
@@ -648,9 +728,7 @@
                 viewChart.classList.remove('hidden');
                 tabChart.className = "pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors";
                 tabList.className = "pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors";
-                
-                // Refresh marker placement when switching to chart view
-                updateCurrentTimeMarker(); 
+                centerTimeline();
             }
         }
 
@@ -662,11 +740,10 @@
             document.getElementById('detName').innerText = job.name;
             document.getElementById('detRegion').innerText = job.region;
             document.getElementById('detBox').innerText = job.box;
-            
             document.getElementById('detSchedule').innerText = job.schedule;
             
             const timeString = job.rule?.time || job.schedule;
-            const istData = convertToIST(timeString, job.region);
+            const istData = convertToIST(timeString, job.region, selectedDate);
             if(istData) {
                 const dayTag = istData.diffDays > 0 ? " (Next Day)" : (istData.diffDays < 0 ? " (Prev Day)" : "");
                 document.getElementById('detScheduleIST').innerText = `${istData.formatted} IST ${dayTag}`;
@@ -698,7 +775,6 @@
             
             jobsData.push(newJob);
             saveJobs(); 
-            
             document.getElementById('addJobForm').reset();
             toggleModal('addJobModal');
         }
