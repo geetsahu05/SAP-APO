@@ -1,7 +1,7 @@
 [
   { 
     "id": 31566, 
-    "name": "Test_Laundry_1", 
+    "name": "Test_Laundry_1_GithubTest", 
     "box": "5972 (2) P33-APO-DP-MASTERDATA-BOX", 
     "region": "HIBSA (FR, GR, CY, ES, PT)", 
     "abap": "YWDT0060 (Variants: ZL810_ES...)", 
