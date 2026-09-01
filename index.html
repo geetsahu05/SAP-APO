@@ -17,11 +17,11 @@
         .gantt-wrapper { display: flex; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #fff; height: 100%; }
         .gantt-sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid #e2e8f0; background: #f8fafc; z-index: 30; box-shadow: 2px 0 5px rgba(0,0,0,0.05); position: relative;}
         
-        /* Smooth scrolling container */
-        .gantt-timeline-container { flex-grow: 1; overflow-x: auto; overflow-y: hidden; position: relative; scroll-behavior: smooth; }
+        /* Smooth scrolling container (Y enabled for sync) */
+        .gantt-timeline-container { flex-grow: 1; overflow-x: auto; overflow-y: auto; position: relative; }
         
         /* Expanded to 72 Hours (3 Days) */
-        .gantt-timeline-inner { min-width: 3600px; position: relative; height: 100%; }
+        .gantt-timeline-inner { min-width: 3600px; position: relative; min-height: 100%; }
         
         .gantt-header { display: flex; border-bottom: 1px solid #e2e8f0; height: 40px; background: #f8fafc; align-items: center; position: sticky; top: 0; z-index: 20;}
         .gantt-header-cell { font-size: 0.65rem; font-weight: 700; color: #64748b; text-align: center; border-right: 1px dashed #e2e8f0; flex: 1; display: flex; justify-content: center; align-items: center;}
@@ -114,7 +114,7 @@
                     <button onclick="scrollTimeline(1)" class="hover:text-blue-600 transition-colors flex items-center gap-1">Scroll Next Day <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
                 </div>
                 
-                <div class="gantt-wrapper shadow-sm flex-1">
+                <div class="gantt-wrapper shadow-sm flex-1 relative">
                     <div class="gantt-sidebar flex flex-col">
                         <div class="gantt-header border-r border-slate-200 px-4">
                             <span class="text-xs font-bold text-slate-500 uppercase">Batch Process / Job Name</span>
@@ -134,7 +134,7 @@
                                 <div class="current-time-marker" id="currentTimeText"></div>
                             </div>
                             
-                            <div id="ganttBarsContainer" class="pb-4 relative z-20 overflow-y-hidden"></div>
+                            <div id="ganttBarsContainer" class="pb-4 relative z-20"></div>
                         </div>
                     </div>
                 </div>
@@ -235,7 +235,31 @@
         let jobsData = [];
         let selectedDate = new Date();
         let activeKeywords = [];
-        let scrollTimeout;
+
+        // Synchronize Scrolling between Sidebar and Timeline vertically
+        function initScrollSync() {
+            const labelsContainer = document.getElementById('ganttLabelsContainer');
+            const timelineContainer = document.getElementById('timelineScrollContainer');
+
+            let isSyncingLeft = false;
+            let isSyncingRight = false;
+
+            labelsContainer.addEventListener('scroll', function() {
+                if (!isSyncingLeft) {
+                    isSyncingRight = true;
+                    timelineContainer.scrollTop = this.scrollTop;
+                }
+                isSyncingLeft = false;
+            });
+
+            timelineContainer.addEventListener('scroll', function() {
+                if (!isSyncingRight) {
+                    isSyncingLeft = true;
+                    labelsContainer.scrollTop = this.scrollTop;
+                }
+                isSyncingRight = false;
+            });
+        }
 
         // Dynamic 72-Hour Grid Generator
         function generateGanttGrid() {
@@ -246,20 +270,20 @@
             headersContainer.innerHTML = '';
             gridContainer.innerHTML = '';
             
-            // 3-Day Background Theme setup
+            // 3-Day Background Theme setup with sticky day markers
             bgContainer.innerHTML = `
-                <div class="absolute top-0 bottom-0 left-0 w-[33.333%] bg-slate-200/40 border-r-4 border-slate-300 z-0 flex justify-center"><span class="text-[10px] font-bold text-slate-400 opacity-60 uppercase tracking-widest mt-12 bg-white/50 px-3 py-1 rounded-full shadow-sm backdrop-blur-sm">Previous Day</span></div>
-                <div class="absolute top-0 bottom-0 left-[33.333%] w-[33.333%] bg-white border-r-4 border-slate-300 z-0 flex justify-center"><span class="text-[10px] font-bold text-blue-500 opacity-80 uppercase tracking-widest mt-12 bg-blue-50 px-3 py-1 rounded-full shadow-sm border border-blue-100">Selected Date</span></div>
-                <div class="absolute top-0 bottom-0 left-[66.666%] w-[33.333%] bg-blue-50/40 z-0 flex justify-center"><span class="text-[10px] font-bold text-blue-400 opacity-60 uppercase tracking-widest mt-12 bg-white/50 px-3 py-1 rounded-full shadow-sm backdrop-blur-sm">Next Day</span></div>
+                <div class="absolute top-0 bottom-0 left-0 w-[33.333%] bg-slate-200/40 border-r-4 border-slate-300 z-0 flex justify-center"><span class="text-[10px] font-bold text-slate-400 opacity-60 uppercase tracking-widest mt-12 bg-white/50 px-3 py-1 rounded-full shadow-sm backdrop-blur-sm sticky top-12 h-6">Previous Day</span></div>
+                <div class="absolute top-0 bottom-0 left-[33.333%] w-[33.333%] bg-white border-r-4 border-slate-300 z-0 flex justify-center"><span class="text-[10px] font-bold text-blue-500 opacity-80 uppercase tracking-widest mt-12 bg-blue-50 px-3 py-1 rounded-full shadow-sm border border-blue-100 sticky top-12 h-6">Selected Date</span></div>
+                <div class="absolute top-0 bottom-0 left-[66.666%] w-[33.333%] bg-blue-50/40 z-0 flex justify-center"><span class="text-[10px] font-bold text-blue-400 opacity-60 uppercase tracking-widest mt-12 bg-white/50 px-3 py-1 rounded-full shadow-sm backdrop-blur-sm sticky top-12 h-6">Next Day</span></div>
             `;
 
             for(let i = 0; i < 72; i++) {
                 const hourString = (i % 24).toString().padStart(2, '0');
                 
-                // Header (Rendered every 2 hours to avoid cluttering at 3600px width)
+                // Header
                 const headerCell = document.createElement('div');
                 headerCell.className = 'gantt-header-cell';
-                if (i % 2 === 0) {
+                if (i % 2 === 0) { // Render labels every 2 hours to prevent clutter
                     headerCell.innerText = `${hourString}:00`;
                 }
                 headersContainer.appendChild(headerCell);
@@ -279,25 +303,11 @@
 
         function centerTimeline() {
             const container = document.getElementById('timelineScrollContainer');
-            // Wait slightly if UI just rendered to ensure scrollWidth is accurate
             setTimeout(() => {
-                const targetScroll = (container.scrollWidth / 3) - 20; // Slight offset for visibility
+                const targetScroll = (container.scrollWidth / 3) - 20; 
                 container.scrollTo({ left: targetScroll, behavior: 'smooth' });
             }, 50);
         }
-
-        // Sync vertical scroll between Labels sidebar and Timeline Grid
-        const labelsContainer = document.getElementById('ganttLabelsContainer');
-        const barsContainer = document.getElementById('ganttBarsContainer');
-        
-        labelsContainer.addEventListener('scroll', () => {
-            barsContainer.scrollTop = labelsContainer.scrollTop;
-        });
-        
-        barsContainer.addEventListener('wheel', (e) => {
-            labelsContainer.scrollTop += e.deltaY;
-            e.preventDefault();
-        });
 
         // Timezone Mapping
         function getRegionTimezone(region) {
@@ -622,15 +632,17 @@
 
         // Advanced 3-Day Gantt Renderer
         function renderAdvancedGantt(data) {
+            const labelsContainer = document.getElementById('ganttLabelsContainer');
+            const barsContainer = document.getElementById('ganttBarsContainer');
+            
             labelsContainer.innerHTML = '';
             barsContainer.innerHTML = '';
             
-            // Step 1: Identify all unique jobs running within the 3-day window
             const baseDate = luxon.DateTime.fromJSDate(selectedDate);
             const evalWindow = [
-                { offset: -1, date: baseDate.minus({days: 1}).toJSDate() }, // Prev Day
-                { offset: 0, date: baseDate.toJSDate() },                   // Selected Day
-                { offset: 1, date: baseDate.plus({days: 1}).toJSDate() }    // Next Day
+                { offset: -1, date: baseDate.minus({days: 1}).toJSDate() }, 
+                { offset: 0, date: baseDate.toJSDate() },                   
+                { offset: 1, date: baseDate.plus({days: 1}).toJSDate() }    
             ];
 
             const uniqueJobsMap = new Map();
@@ -647,7 +659,6 @@
 
             const aggregatedJobs = Array.from(uniqueJobsMap.values());
 
-            // Step 2: Plot the Rows and Multi-day Bars
             aggregatedJobs.forEach(({job, executions}) => {
                 const labelRow = document.createElement('div');
                 labelRow.className = 'gantt-row';
@@ -659,21 +670,15 @@
                 
                 const timeString = job.rule?.time || job.schedule;
                 const colorClass = getColorForRegion(job.region);
-                const widthPercent = (45 / 4320) * 100; // Default approx 45 mins block on a 4320 min canvas
+                const widthPercent = (45 / 4320) * 100; 
 
-                // Plot each occurrence of the job across the 3 days
                 executions.forEach(exec => {
                     const istData = convertToIST(timeString, job.region, exec.date);
                     
                     if (istData) {
-                        // Math: Where does this bar land on the 72h canvas?
-                        // canvas starts at offset -1 (Prev Day)
-                        // Local offset + IST Diff determines final conceptual day
                         const absoluteDayOffset = exec.offset + istData.diffDays;
                         
-                        // Only render if it actually falls within the visual -1 to 1 window
                         if (absoluteDayOffset >= -1 && absoluteDayOffset <= 1) {
-                            // Convert Day Offset to mathematical index (0=Prev, 1=Selected, 2=Next)
                             const timelineDayIndex = absoluteDayOffset + 1; 
                             const totalMinutes = (timelineDayIndex * 1440) + (istData.hours * 60) + istData.minutes;
                             const leftPercent = (totalMinutes / 4320) * 100;
@@ -682,7 +687,6 @@
                             let shiftIndicator = '';
                             let hoverTitle = `${job.name} | ${istData.formatted} IST | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
 
-                            // Shift Patterns
                             if (istData.diffDays > 0) {
                                 shiftClass = 'bar-shift-next';
                                 shiftIndicator = `<span class="ml-1 text-[8px] bg-black/20 px-1 rounded">+1d</span>`;
@@ -693,7 +697,6 @@
                                 hoverTitle = `${job.name} | ${istData.formatted} IST (-1 Day shift) | Local: ${timeString.match(/(\d{2}):(\d{2})/)[0]}`;
                             }
 
-                            // Inject Bar instance
                             barRow.innerHTML += `
                                 <div class="gantt-bar-wrapper">
                                     <div class="gantt-bar ${colorClass} ${shiftClass}" style="left: ${leftPercent}%; width: ${widthPercent}%; min-width: 60px;" onclick='openDetailsById(${job.id})' title="${hoverTitle}">
@@ -706,9 +709,6 @@
                 });
                 barsContainer.appendChild(barRow);
             });
-            
-            // Auto align height if bars spill over
-            barsContainer.style.height = `${aggregatedJobs.length * 48}px`; 
         }
 
         // View Tabs Interactivity
@@ -780,6 +780,7 @@
         }
 
         // Initialization
+        initScrollSync();
         generateGanttGrid();
         initDatePicker();
         loadSectorData(); 
