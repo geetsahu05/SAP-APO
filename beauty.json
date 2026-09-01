@@ -761,7 +761,7 @@
     "id": 18478,
     "name": "MC_YBDP_AP_FORECAST",
     "box": "P31-APO-DP-UK-FCST-APAC-BOX",
-    "region": "CET",
+    "region": "CEST",
     "abap": "CAPCHAIN",
     "schedule": "18:00 pm CET Sunday",
     "rule": {
