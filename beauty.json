@@ -5,9 +5,9 @@
     "box": "16062 P31-APO-DP-UK-MD-BOX",
     "region": "B WEU",
     "abap": "YWDT0060",
-    "schedule": "Mon to Fri 02:00 CET",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
-    "dependency": "Parallel to 1st job"
+    "schedule": "Mon to Fri 02:00 CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
+    "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 69430,
@@ -15,9 +15,9 @@
     "box": "16062 P31-APO-DP-UK-MD-BOX",
     "region": "UK SKP",
     "abap": "YWDT0060",
-    "schedule": "Mon to Fri 02:00 CET",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
-    "dependency": "Parallel to 1st job"
+    "schedule": "Mon to Fri 02:00 CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
+    "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 112369,
@@ -25,9 +25,9 @@
     "box": "16062 P31-APO-DP-UK-MD-BOX",
     "region": "B CEE",
     "abap": "YWDT0060",
-    "schedule": "Mon to Fri 02:00 CET",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
-    "dependency": "Parallel to 1st job"
+    "schedule": "Mon to Fri 02:00 CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
+    "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 147252,
@@ -35,9 +35,9 @@
     "box": "26573 P31-APO-DP-B-CIS-MD-BOX",
     "region": "B CIS",
     "abap": "YWDT0060",
-    "schedule": "Mon to Fri 02:00 CET",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
-    "dependency": "Parallel to 1st job"
+    "schedule": "MO / TU / WED / THU / FRI 02:00 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
+    "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 147300,
@@ -45,9 +45,9 @@
     "box": "26587 P31-APO-DP-B-MEA-MD-BOX",
     "region": "B MEA",
     "abap": "YWDT0060",
-    "schedule": "Mon to Fri 02:00 CET",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00" },
-    "dependency": "Parallel to 1st job"
+    "schedule": "MO / TU / WED / THU / FRI 02:00 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
+    "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 84023,
@@ -55,9 +55,9 @@
     "box": "18350 P31-APO-DP-UK-ANZ-MD-BOX",
     "region": "UK ANZ",
     "abap": "YWDT0060",
-    "schedule": "Mon to Fri 05:00 AEST",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "05:00" },
-    "dependency": "Parallel to 1st job"
+    "schedule": "MO / TU / WED / THU / FRI 05:00 am AEST Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "05:00", "timezone": "AEST" },
+    "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 84030,
@@ -65,9 +65,9 @@
     "box": "18351 P31-APO-DP-UK-GCN-BOX",
     "region": "UK GCN",
     "abap": "YWDT0060",
-    "schedule": "Mon to Fri 05:00 CST",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "05:00" },
-    "dependency": "Parallel to 1st job"
+    "schedule": "MO / TU / WED / THU / FRI 05:00 am CST Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "05:00", "timezone": "CST" },
+    "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 108501,
@@ -75,9 +75,9 @@
     "box": "20766 P31-APO-DP-UK-NA-MD-BOX",
     "region": "B NA",
     "abap": "YWDT0060",
-    "schedule": "Mon to Fri 03:00 EST5EDT",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "03:00" },
-    "dependency": "Parallel to 1st job"
+    "schedule": "Run MON-FRI at 03:00 AM EST5EDT Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "03:00", "timezone": "EST" },
+    "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 119308,
@@ -85,174 +85,109 @@
     "box": "22996 P31-APO-DP-B-LAT-MD-BOX",
     "region": "B LAT",
     "abap": "YWDT0060",
-    "schedule": "Mon to Fri 03:00 COT",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "03:00" },
-    "dependency": "Parallel to 1st job"
+    "schedule": "MO / TU / WED / THU / FRI 03:00 am COT Time[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "03:00", "timezone": "COT" },
+    "dependency": "Parallel to 1st job[cite: 2]"
   },
-
-
-
-  
-
-
   {
     "id": 112357,
-    "name": "ZBWEUD_DATA[cite: 2]",
-    "box": "16062 P31-APO-DP-UK-MD-BOX[cite: 2]",
-    "region": "B WEU[cite: 2]",
+    "name": "ZBWEUD_DATA",
+    "box": "16062 P31-APO-DP-UK-MD-BOX",
+    "region": "B WEU",
     "abap": "N/A",
-    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "02:00"
-    },
+    "schedule": "MO / TU / WED / THU / FRI 02:00 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
     "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 69428,
-    "name": "ZKSKPD_DATA[cite: 2]",
-    "box": "16062 P31-APO-DP-UK-MD-BOX[cite: 2]",
-    "region": "UK SKP[cite: 2]",
+    "name": "ZKSKPD_DATA",
+    "box": "16062 P31-APO-DP-UK-MD-BOX",
+    "region": "UK SKP",
     "abap": "N/A",
-    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "02:00"
-    },
+    "schedule": "MO / TU / WED / THU / FRI 02:00 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
     "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 112368,
-    "name": "ZBCEED_DATA[cite: 2]",
-    "box": "16062 P31-APO-DP-UK-MD-BOX[cite: 2]",
-    "region": "B CEE[cite: 2]",
+    "name": "ZBCEED_DATA",
+    "box": "16062 P31-APO-DP-UK-MD-BOX",
+    "region": "B CEE",
     "abap": "N/A",
-    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "02:00"
-    },
+    "schedule": "MO / TU / WED / THU / FRI 02:00 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
     "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
-    "id": 67919,
-    "name": "ZK001D_DATA[cite: 2]",
-    "box": "16062 P31-APO-DP-UK-MD-BOX[cite: 2]",
-    "region": "DE[cite: 2]",
-    "abap": "N/A",
-    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "02:00"
-    },
-    "dependency": "AFTER SKP DATA job[cite: 2]"
-  },
-  {
     "id": 147251,
-    "name": "ZBCISD_DATA[cite: 2]",
-    "box": "26573 P31-APO-DP-B-CIS-MD-BOX[cite: 2]",
-    "region": "B CIS[cite: 2]",
+    "name": "ZBCISD_DATA",
+    "box": "26573 P31-APO-DP-B-CIS-MD-BOX",
+    "region": "B CIS",
     "abap": "N/A",
-    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "02:00"
-    },
+    "schedule": "MO / TU / WED / THU / FRI 02:00 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
     "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 147299,
-    "name": "ZBMEAD_DATA[cite: 2]",
-    "box": "26587 P31-APO-DP-B-MEA-MD-BOX[cite: 2]",
-    "region": "B MEA[cite: 2]",
+    "name": "ZBMEAD_DATA",
+    "box": "26587 P31-APO-DP-B-MEA-MD-BOX",
+    "region": "B MEA",
     "abap": "N/A",
-    "schedule": "MO / TU / WED / THU / FRI  02:00 am CET[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "02:00"
-    },
+    "schedule": "MO / TU / WED / THU / FRI 02:00 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:00", "timezone": "CET" },
     "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 84022,
-    "name": "ZKANZD_DATA[cite: 2]",
-    "box": "18350 P31-APO-DP-UK-ANZ-MD-BOX[cite: 2]",
-    "region": "UK ANZ[cite: 2]",
+    "name": "ZKANZD_DATA",
+    "box": "18350 P31-APO-DP-UK-ANZ-MD-BOX",
+    "region": "UK ANZ",
     "abap": "N/A",
-    "schedule": "MO / TU / WED / THU / FRI  05:00 am AEST[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "05:00"
-    },
+    "schedule": "MO / TU / WED / THU / FRI 05:00 am AEST Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "05:00", "timezone": "AEST" },
     "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 84029,
-    "name": "ZKGCND_DATA[cite: 2]",
-    "box": "18351 P31-APO-DP-UK-GCN-BOX[cite: 2]",
-    "region": "UK GCN[cite: 2]",
+    "name": "ZKGCND_DATA",
+    "box": "18351 P31-APO-DP-UK-GCN-BOX",
+    "region": "UK GCN",
     "abap": "N/A",
-    "schedule": "MO / TU / WED / THU / FRI  05:00 am CST[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "05:00"
-    },
+    "schedule": "MO / TU / WED / THU / FRI 05:00 am CST Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "05:00", "timezone": "CST" },
     "dependency": "Parallel to 1st job[cite: 2]"
   },
   {
     "id": 115333,
-    "name": "ZBNABD_DATA[cite: 2]",
-    "box": "22168 P31-APO-DP-UK-NA-MD2-BOX[cite: 2]",
-    "region": "B NA[cite: 2]",
+    "name": "ZBNABD_DATA",
+    "box": "22168 P31-APO-DP-UK-NA-MD2-BOX",
+    "region": "B NA",
     "abap": "N/A",
-    "schedule": "MON-FRI at 07:00 am EST5EDT[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "07:00"
-    },
+    "schedule": "MON-FRI at 07:00 am EST5EDT Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "07:00", "timezone": "EST" },
     "dependency": "1st job[cite: 2]"
   },
   {
     "id": 119644,
-    "name": "ZBLATD_DATA[cite: 2]",
-    "box": "23102 P31-APO-DP-B-LAT-MD2-BOX[cite: 2]",
-    "region": "B LAT[cite: 2]",
+    "name": "ZBLATD_DATA",
+    "box": "23102 P31-APO-DP-B-LAT-MD2-BOX",
+    "region": "B LAT",
     "abap": "N/A",
-    "schedule": "MO / TU / WED / THU / FRI  03:00 am COT[cite: 2]",
-    "rule": {
-      "frequency": "weekdays",
-      "days": [1, 2, 3, 4, 5],
-      "time": "03:00"
-    },
+    "schedule": "MO / TU / WED / THU / FRI 03:00 am COT Time[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "03:00", "timezone": "COT" },
     "dependency": "1st job[cite: 2]"
   },
-
-
-
-
-
-
   {
     "id": 104262,
     "name": "ZBWEUD_PA_INIT",
     "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
     "region": "WEU Cosmetics",
     "abap": "N/A",
-    "schedule": "First Wednesday of the month at 23:55 CET",
-    "rule": {
-      "frequency": "monthly_first_wednesday",
-      "time": "23:55"
-    },
-    "dependency": "First job"
+    "schedule": "First Wednesday of the month at 23:55 CET[cite: 2]",
+    "rule": { "frequency": "monthly_first_wednesday", "time": "23:55", "timezone": "CET" },
+    "dependency": "First job[cite: 2]"
   },
   {
     "id": 69386,
@@ -260,12 +195,9 @@
     "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
     "region": "SKP Cosmetics",
     "abap": "N/A",
-    "schedule": "First Wednesday of the month at 23:55 CET",
-    "rule": {
-      "frequency": "monthly_first_wednesday",
-      "time": "23:55"
-    },
-    "dependency": "Parallel to first job"
+    "schedule": "First Wednesday of the month at 23:55 CET[cite: 2]",
+    "rule": { "frequency": "monthly_first_wednesday", "time": "23:55", "timezone": "CET" },
+    "dependency": "Parallel to first job[cite: 2]"
   },
   {
     "id": 110725,
@@ -273,12 +205,9 @@
     "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
     "region": "CEE Cosmetics",
     "abap": "N/A",
-    "schedule": "First Wednesday of the month at 23:55 CET",
-    "rule": {
-      "frequency": "monthly_first_wednesday",
-      "time": "23:55"
-    },
-    "dependency": "Parallel to first job"
+    "schedule": "First Wednesday of the month at 23:55 CET[cite: 2]",
+    "rule": { "frequency": "monthly_first_wednesday", "time": "23:55", "timezone": "CET" },
+    "dependency": "Parallel to first job[cite: 2]"
   },
   {
     "id": 148367,
@@ -286,12 +215,9 @@
     "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
     "region": "CIS Beauty",
     "abap": "N/A",
-    "schedule": "First Wednesday of the month at 23:55 CET",
-    "rule": {
-      "frequency": "monthly_first_wednesday",
-      "time": "23:55"
-    },
-    "dependency": "Parallel to first job"
+    "schedule": "First Wednesday of the month at 23:55 CET[cite: 2]",
+    "rule": { "frequency": "monthly_first_wednesday", "time": "23:55", "timezone": "CET" },
+    "dependency": "Parallel to first job[cite: 2]"
   },
   {
     "id": 148368,
@@ -299,12 +225,9 @@
     "box": "16309 P31-APO-DP-UK-PAINIT-BOX",
     "region": "MEA Beauty",
     "abap": "N/A",
-    "schedule": "First Wednesday of the month at 23:55 CET",
-    "rule": {
-      "frequency": "monthly_first_wednesday",
-      "time": "23:55"
-    },
-    "dependency": "Parallel to first job"
+    "schedule": "First Wednesday of the month at 23:55 CET[cite: 2]",
+    "rule": { "frequency": "monthly_first_wednesday", "time": "23:55", "timezone": "CET" },
+    "dependency": "Parallel to first job[cite: 2]"
   },
   {
     "id": 83570,
@@ -312,12 +235,9 @@
     "box": "18338 P31-APO-DP-UK-APAC-ANZ-PAINIT-BOX",
     "region": "APAC ANZ DP Cosmetics",
     "abap": "N/A",
-    "schedule": "First Wednesday of the month at 23:55 AEST",
-    "rule": {
-      "frequency": "monthly_first_wednesday",
-      "time": "23:55"
-    },
-    "dependency": "First job"
+    "schedule": "First Wednesday of the month at 23:55 AEST Time Zone[cite: 2]",
+    "rule": { "frequency": "monthly_first_wednesday", "time": "23:55", "timezone": "AEST" },
+    "dependency": "First job[cite: 2]"
   },
   {
     "id": 83572,
@@ -325,12 +245,9 @@
     "box": "18339 P31-APO-DP-UK-APAC-GCN-PAINIT-BOX",
     "region": "APAC GCN DP Cosmetics",
     "abap": "N/A",
-    "schedule": "First Wednesday of the month at 23:55 CST",
-    "rule": {
-      "frequency": "monthly_first_wednesday",
-      "time": "23:55"
-    },
-    "dependency": "1st job"
+    "schedule": "First Wednesday of the month at 23:55 CST Time Zone[cite: 2]",
+    "rule": { "frequency": "monthly_first_wednesday", "time": "23:55", "timezone": "CST" },
+    "dependency": "1st job[cite: 2]"
   },
   {
     "id": 108494,
@@ -338,12 +255,9 @@
     "box": "20765 P31-APO-DP-UK-NA-PAINIT-BOX",
     "region": "NA DP Cosmetics",
     "abap": "N/A",
-    "schedule": "First Wednesday of the month at 23:55 EST5EDT",
-    "rule": {
-      "frequency": "monthly_first_wednesday",
-      "time": "23:55"
-    },
-    "dependency": "First job"
+    "schedule": "First Wednesday of the month at 23:55 EST5EDT[cite: 2]",
+    "rule": { "frequency": "monthly_first_wednesday", "time": "23:55", "timezone": "EST" },
+    "dependency": "First job[cite: 2]"
   },
   {
     "id": 119303,
@@ -351,30 +265,19 @@
     "box": "22995 P31-APO-DP-B-LAT-PAINIT-BOX",
     "region": "LATAM DP Cosmetics",
     "abap": "N/A",
-    "schedule": "First Wednesday of the month at 23:55 COT",
-    "rule": {
-      "frequency": "monthly_first_wednesday",
-      "time": "23:55"
-    },
-    "dependency": "First job"
+    "schedule": "First Wednesday of the month at 23:55 COT[cite: 2]",
+    "rule": { "frequency": "monthly_first_wednesday", "time": "23:55", "timezone": "COT" },
+    "dependency": "First job[cite: 2]"
   },
-
-
-
-
-
-
-
-
   {
     "id": 143089,
     "name": "ZKSKPD_HST_S01",
     "box": "16584 P31-APO-DP-UK-SHIST-SKP-BOX",
     "region": "UK SKP",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "1st job"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After box 16064 done[cite: 2]"
   },
   {
     "id": 69435,
@@ -382,9 +285,9 @@
     "box": "16584 P31-APO-DP-UK-SHIST-SKP-BOX",
     "region": "UK SKP",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZKSKPD_HST_S01"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 69436,
@@ -392,9 +295,9 @@
     "box": "16584 P31-APO-DP-UK-SHIST-SKP-BOX",
     "region": "UK SKP",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - BI_BTCH_ZKSKPD_HST2"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 74585,
@@ -402,9 +305,9 @@
     "box": "16584 P31-APO-DP-UK-SHIST-SKP-BOX",
     "region": "UK SKP",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZKSKPD_HST_S03"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 111029,
@@ -412,9 +315,9 @@
     "box": "21100 P31-APO-DP-B-SHIST-WEU-BOX",
     "region": "UK WEU",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "1st job"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After box 16064 done[cite: 2]"
   },
   {
     "id": 111030,
@@ -422,9 +325,9 @@
     "box": "21100 P31-APO-DP-B-SHIST-WEU-BOX",
     "region": "UK WEU",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBWEUD_HST_S01"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job 111029 Successfully done[cite: 2]"
   },
   {
     "id": 111032,
@@ -432,9 +335,9 @@
     "box": "21100 P31-APO-DP-B-SHIST-WEU-BOX",
     "region": "UK WEU",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - BI_BTCH_ZBWEUD_HST2"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job 118729 Successfully done[cite: 2]"
   },
   {
     "id": 111033,
@@ -442,9 +345,9 @@
     "box": "21100 P31-APO-DP-B-SHIST-WEU-BOX",
     "region": "UK WEU",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBWEUD_HST_S03"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job 111032 Successfully done[cite: 2]"
   },
   {
     "id": 112372,
@@ -452,9 +355,9 @@
     "box": "21663 P31-APO-DP-UK-SHIST-CEE-BOX",
     "region": "CEE",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "1st job"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After box 16064 done[cite: 2]"
   },
   {
     "id": 112373,
@@ -462,9 +365,9 @@
     "box": "21663 P31-APO-DP-UK-SHIST-CEE-BOX",
     "region": "CEE",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBCEED_HST_S01"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 112374,
@@ -472,9 +375,9 @@
     "box": "21663 P31-APO-DP-UK-SHIST-CEE-BOX",
     "region": "CEE",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - BI_BTCH_ZBCEED_HST2"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 112375,
@@ -482,9 +385,9 @@
     "box": "21663 P31-APO-DP-UK-SHIST-CEE-BOX",
     "region": "CEE",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBCEED_HST_S03"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 147254,
@@ -492,9 +395,9 @@
     "box": "26574 P31-APO-DP-B-SHIST-CIS-BOX",
     "region": "CIS",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "1st job"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After box 16064 done[cite: 2]"
   },
   {
     "id": 147255,
@@ -502,9 +405,9 @@
     "box": "26574 P31-APO-DP-B-SHIST-CIS-BOX",
     "region": "CIS",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBCISD_HST_S01"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job 147254 Successfully done[cite: 2]"
   },
   {
     "id": 147257,
@@ -512,9 +415,9 @@
     "box": "26574 P31-APO-DP-B-SHIST-CIS-BOX",
     "region": "CIS",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - BI_BTCH_ZBCISD_HST2"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job 147256 Successfully done[cite: 2]"
   },
   {
     "id": 147258,
@@ -522,9 +425,9 @@
     "box": "26574 P31-APO-DP-B-SHIST-CIS-BOX",
     "region": "CIS",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBCISD_HST_S03"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job 147257 Successfully done[cite: 2]"
   },
   {
     "id": 147307,
@@ -532,9 +435,9 @@
     "box": "26591 P31-APO-DP-B-SHIST-MEA-BOX",
     "region": "MEA",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "1st job"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After box 16064 done[cite: 2]"
   },
   {
     "id": 147308,
@@ -542,9 +445,9 @@
     "box": "26591 P31-APO-DP-B-SHIST-MEA-BOX",
     "region": "MEA",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBMEAD_HST_S01"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job 147307 Successfully done[cite: 2]"
   },
   {
     "id": 147310,
@@ -552,9 +455,9 @@
     "box": "26591 P31-APO-DP-B-SHIST-MEA-BOX",
     "region": "MEA",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - BI_BTCH_ZBMEAD_HST2"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job 147309 Successfully done[cite: 2]"
   },
   {
     "id": 147311,
@@ -562,9 +465,9 @@
     "box": "26591 P31-APO-DP-B-SHIST-MEA-BOX",
     "region": "MEA",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBMEAD_HST_S03"
+    "schedule": "Monday to Friday at 00:05 am CET[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:05", "timezone": "CET" },
+    "dependency": "After Job 147310 Successfully done[cite: 2]"
   },
   {
     "id": 84052,
@@ -572,9 +475,9 @@
     "box": "18355 P31-APO-DP-UK-SHIST-ANZ-BOX",
     "region": "ANZ",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "1st job"
+    "schedule": "Daily Mon to Fri at 2:15 am SYDNEY Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "SYDNEY" },
+    "dependency": "From Mon to Fri after box 18353[cite: 2]"
   },
   {
     "id": 84053,
@@ -582,9 +485,9 @@
     "box": "18355 P31-APO-DP-UK-SHIST-ANZ-BOX",
     "region": "ANZ",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZKANZD_HST_S01"
+    "schedule": "Daily Mon to Fri at 2:15 am SYDNEY Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "SYDNEY" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 84054,
@@ -592,9 +495,9 @@
     "box": "18355 P31-APO-DP-UK-SHIST-ANZ-BOX",
     "region": "ANZ",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - BI_BTCH_ZKANZD_HST2"
+    "schedule": "Daily Mon to Fri at 2:15 am SYDNEY Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "SYDNEY" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 84055,
@@ -602,9 +505,9 @@
     "box": "18355 P31-APO-DP-UK-SHIST-ANZ-BOX",
     "region": "ANZ",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZKANZD_HST_S03"
+    "schedule": "Daily Mon to Fri at 2:15 am SYDNEY Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "SYDNEY" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 84067,
@@ -612,9 +515,9 @@
     "box": "18361 P31-APO-DP-UK-SHIST-GCN-BOX",
     "region": "GCN",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "1st job"
+    "schedule": "Daily Mon to Fri at 2:15 CST Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "CST" },
+    "dependency": "Daily (Mo to Fri) after box 18359[cite: 2]"
   },
   {
     "id": 84068,
@@ -622,9 +525,9 @@
     "box": "18361 P31-APO-DP-UK-SHIST-GCN-BOX",
     "region": "GCN",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZKGCND_HST_S01"
+    "schedule": "Daily Mon to Fri at 2:15 CST Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "CST" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 84069,
@@ -632,9 +535,9 @@
     "box": "18361 P31-APO-DP-UK-SHIST-GCN-BOX",
     "region": "GCN",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - BI_BTCH_ZKGCND_HST2"
+    "schedule": "Daily Mon to Fri at 2:15 CST Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "CST" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 84070,
@@ -642,9 +545,9 @@
     "box": "18361 P31-APO-DP-UK-SHIST-GCN-BOX",
     "region": "GCN",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBCEED_HST_S03"
+    "schedule": "Daily Mon to Fri at 2:15 CST Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "CST" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 108505,
@@ -652,9 +555,9 @@
     "box": "20769 P31-APO-DP-UK-SHIST-NA-BOX",
     "region": "NAB",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "1st job"
+    "schedule": "Run MON-FRI at 02:15 am EST5EDT Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "EST" },
+    "dependency": "From MONDAY to THURSDAY after BOX 20768 is done[cite: 2]"
   },
   {
     "id": 127521,
@@ -662,9 +565,9 @@
     "box": "20769 P31-APO-DP-UK-SHIST-NA-BOX",
     "region": "NAB",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBNABD_HST_S01"
+    "schedule": "Run MON-FRI at 02:15 am EST5EDT Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "EST" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 108508,
@@ -672,9 +575,9 @@
     "box": "20769 P31-APO-DP-UK-SHIST-NA-BOX",
     "region": "NAB",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - BI_BTCH_ZBNABD_HST2"
+    "schedule": "Run MON-FRI at 02:15 am EST5EDT Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "EST" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 108509,
@@ -682,9 +585,9 @@
     "box": "20769 P31-APO-DP-UK-SHIST-NA-BOX",
     "region": "NAB",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBNABD_HST_S03"
+    "schedule": "Run MON-FRI at 02:15 am EST5EDT Time Zone[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:15", "timezone": "EST" },
+    "dependency": "After Job Successfully done[cite: 2]"
   },
   {
     "id": 119315,
@@ -692,9 +595,9 @@
     "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
     "region": "LAT",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "1st job"
+    "schedule": "Daily Mon to Fri at 2:20 am COT[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:20", "timezone": "COT" },
+    "dependency": "From Mon to Fri after box P31-APO-DP-B-LAT-DELSALSEL-BOX done[cite: 2]"
   },
   {
     "id": 119316,
@@ -702,9 +605,9 @@
     "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
     "region": "LAT",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBLATD_HST_S01"
+    "schedule": "Daily Mon to Fri at 2:20 am COT[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:20", "timezone": "COT" },
+    "dependency": "After Job 119315 Successfully done[cite: 2]"
   },
   {
     "id": 119318,
@@ -712,9 +615,9 @@
     "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
     "region": "LAT",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - BI_BTCH_ZBLATD_HST2"
+    "schedule": "Daily Mon to Fri at 2:20 am COT[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:20", "timezone": "COT" },
+    "dependency": "After Job 119317 Successfully done[cite: 2]"
   },
   {
     "id": 119319,
@@ -722,96 +625,8 @@
     "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
     "region": "LAT",
     "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "00:00" },
-    "dependency": "After job - ZBLATD_HST_S03"
-  },
-    {
-    "id": 119319,
-    "name": "ZBLATD_HST_S04",
-    "box": "23001 P31-APO-DP-B-SHIST-LAT-BOX",
-    "region": "LAT",
-    "abap": "N/A",
-    "schedule": "Mon to Fri",
-    "rule": { "frequency": "weekdays", "days": 0, "time": "00:00" },
-    "dependency": "After job - ZBLATD_HST_S03"
-  },
-
-
-
-
-
-
-
-  {
-    "id": 16140,
-    "name": "MC_YBDP_EU_FORECAST",
-    "box": "P31-APO-DP-UK-FCST-BOX",
-    "region": "EU (WEU, CEE, SKP), CIS, MEA",
-    "abap": "CAPCHAIN",
-    "schedule": "19:00 pm CET Sunday",
-    "rule": {
-      "frequency": "weekly",
-      "day": 0,
-      "time": "19:00"
-    },
-    "dependency": "1st job"
-  },
-  {
-    "id": 18478,
-    "name": "MC_YBDP_AP_FORECAST",
-    "box": "P31-APO-DP-UK-FCST-APAC-BOX",
-    "region": "DE",
-    "abap": "CAPCHAIN",
-    "schedule": "18:00 pm CET Sunday",
-    "rule": {
-      "frequency": "weekly",
-      "day": 0,
-      "time": "18:00"
-    },
-    "dependency": "1st job"
-  },
-  {
-    "id": 20777,
-    "name": "YBDP_NAB_FORECAST",
-    "box": "P31-APO-DP-UK-FCST-NA-BOX",
-    "region": "NA",
-    "abap": "CAPCHAIN",
-    "schedule": "23:00 PM EST5EDT Sunday",
-    "rule": {
-      "frequency": "weekly",
-      "day": 0,
-      "time": "23:00"
-    },
-    "dependency": "1st job"
-  },
-  {
-    "id": 23030,
-    "name": "YBDP_LAM_FORECAST",
-    "box": "P31-APO-DP-B-FCST-LAT-BOX",
-    "region": "LAT",
-    "abap": "CAPCHAIN",
-    "schedule": "23:00 PM COT Sunday",
-    "rule": {
-      "frequency": "weekly",
-      "day": 0,
-      "time": "23:00"
-    },
-    "dependency": "1st job"
-  },
-  {
-    "id": 99999,
-    "name": "YBDP_NAB_FORECAST_RETAIL",
-    "box": "P31-APO-DP-UK-FCST-NA-RET-BOX",
-    "region": "NA Retail",
-    "abap": "CAPCHAIN",
-    "schedule": "23:00 PM EST Sunday",
-    "rule": {
-      "frequency": "weekly",
-      "day": 0,
-      "time": "23:00"
-    },
-    "dependency": "1st job"
+    "schedule": "Daily Mon to Fri at 2:20 am COT[cite: 2]",
+    "rule": { "frequency": "weekdays", "days": [1, 2, 3, 4, 5], "time": "02:20", "timezone": "COT" },
+    "dependency": "After Job 119318 Successfully done[cite: 2]"
   }
-  
 ]
