@@ -65,7 +65,7 @@
         <div class="flex items-center gap-4 w-1/3 justify-end">
             <div class="relative w-full max-w-sm">
                 <svg class="w-4 h-4 absolute left-3 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                <input type="text" id="searchInput" placeholder="Search bypasses date..." class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm shadow-sm transition-all bg-white placeholder-slate-400">
+                <input type="text" id="searchInput" placeholder="Search catalog..." class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm shadow-sm transition-all bg-white placeholder-slate-400">
             </div>
             <button onclick="toggleModal('addJobModal')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm whitespace-nowrap flex items-center gap-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -77,8 +77,13 @@
     <div class="flex flex-1 overflow-hidden">
         <aside class="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0 z-10">
             <div class="p-5 border-b border-slate-100 bg-slate-50/80">
+                <!-- Checkbox Added Here -->
                 <div class="flex justify-between items-center mb-2">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500" id="sidebarTitle">Monitor Target Date</h2>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500" id="sidebarTitle">Monitor Date</h2>
+                    <label class="flex items-center gap-1.5 cursor-pointer bg-white px-2 py-1 rounded border border-slate-200 shadow-sm hover:bg-slate-50 transition-colors">
+                        <input type="checkbox" id="chkDateFilter" checked class="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" onchange="toggleDateFilter()">
+                        <span class="text-[10px] font-black text-slate-600 uppercase">Filter</span>
+                    </label>
                 </div>
                 <input type="date" id="dateSelector" class="w-full mb-3 px-3 py-2 border border-slate-300 rounded text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-sm transition-all">
                 <p id="currentDateDisplay" class="text-sm font-semibold text-blue-600"></p>
@@ -130,7 +135,7 @@
         </main>
     </div>
 
-    <!-- Modals (Add / Edit / Details) -->
+    <!-- Modals (Add / Details) -->
     <div id="addJobModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
             <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
@@ -227,9 +232,21 @@
         let activeKeywords = [];
         let compiledExecutions = []; 
 
+        function toggleDateFilter() {
+            const isChecked = document.getElementById('chkDateFilter').checked;
+            const dateInput = document.getElementById('dateSelector');
+            if(isChecked) {
+                dateInput.classList.remove('opacity-50', 'bg-slate-100');
+                dateInput.disabled = false;
+            } else {
+                dateInput.classList.add('opacity-50', 'bg-slate-100');
+                dateInput.disabled = true;
+            }
+            applyFilters();
+        }
+
         function toggleViewMode(mode) {
             viewMode = mode;
-            
             const btnIST = document.getElementById('btnModeIST');
             const btnLocal = document.getElementById('btnModeLocal');
             
@@ -267,19 +284,14 @@
         function generateGanttGrid() {
             const headersContainer = document.getElementById('ganttTimeHeaders');
             const gridContainer = document.getElementById('ganttGridLines');
-            
-            headersContainer.innerHTML = '';
-            gridContainer.innerHTML = '';
-
+            headersContainer.innerHTML = ''; gridContainer.innerHTML = '';
             for(let i = 0; i < 24; i++) {
                 const hourString = i.toString().padStart(2, '0');
                 const headerCell = document.createElement('div');
-                headerCell.className = 'gantt-header-cell';
-                headerCell.innerText = `${hourString}:00`;
+                headerCell.className = 'gantt-header-cell'; headerCell.innerText = `${hourString}:00`;
                 headersContainer.appendChild(headerCell);
                 
-                const gridLine = document.createElement('div');
-                gridLine.className = 'gantt-grid-line';
+                const gridLine = document.createElement('div'); gridLine.className = 'gantt-grid-line';
                 gridContainer.appendChild(gridLine);
             }
         }
@@ -287,18 +299,12 @@
         function getShortRegionCode(region) {
             if (!region) return '';
             const r = region.toUpperCase();
-            if (r.includes('SKP')) return 'SKP';
-            if (r.includes('WEU')) return 'WEU';
-            if (r.includes('CEE')) return 'CEE';
-            if (r.includes('CIS')) return 'CIS';
-            if (r.includes('MEA')) return 'MEA';
-            if (r.includes('ANZ')) return 'ANZ';
-            if (r.includes('GCN')) return 'GCN';
-            if (r.includes('APAC')) return 'APAC';
-            if (r.includes('LAT')) return 'LAT';
-            if (r.includes('KOR')) return 'KOR';
-            if (r.includes('HIBSA')) return 'HIBSA';
-            if (r.includes('NA ') || r.includes('NAB') || r.includes('L NA')) return 'NA';
+            if (r.includes('SKP')) return 'SKP'; if (r.includes('WEU')) return 'WEU';
+            if (r.includes('CEE')) return 'CEE'; if (r.includes('CIS')) return 'CIS';
+            if (r.includes('MEA')) return 'MEA'; if (r.includes('ANZ')) return 'ANZ';
+            if (r.includes('GCN')) return 'GCN'; if (r.includes('APAC')) return 'APAC';
+            if (r.includes('LAT')) return 'LAT'; if (r.includes('KOR')) return 'KOR';
+            if (r.includes('HIBSA')) return 'HIBSA'; if (r.includes('NA ') || r.includes('NAB') || r.includes('L NA')) return 'NA';
             
             const parts = region.split(' ');
             const first = parts[0].replace(/[^A-Z0-9]/g, '');
@@ -319,7 +325,6 @@
                 if (tz.includes('UTC') || tz.includes('UT')) return 'UTC';
                 return job.rule.timezone;
             }
-            
             const text = ((job.region || '') + ' ' + (job.schedule || '')).toUpperCase();
             if (text.includes('EST') || text.includes('NA') || text.includes('CONNECTICUT')) return 'America/New_York';
             if (text.includes('COT') || text.includes('COLOMBIA') || text.includes('LAT')) return 'America/Bogota';
@@ -327,7 +332,6 @@
             if (text.includes('CST') || text.includes('CHINA') || text.includes('GCN')) return 'Asia/Shanghai';
             if (text.includes('KST') || text.includes('ROK')) return 'Asia/Seoul';
             if (text.includes('UTC') || text.includes('UT')) return 'UTC';
-            
             return 'Europe/Berlin'; 
         }
 
@@ -373,10 +377,11 @@
             return false;
         }
 
-        // Updated Compiler: Takes "ignoreDateCheck" parameter from active search
-        function compileExecutions(jobs, targetDate, ignoreDateCheck) {
+        // Upgraded Compiler: Strict Date Matching OR "Next Valid Date" Catalog Mode
+        function compileExecutions(jobs, targetDate) {
             const results = [];
             const selectedLuxon = luxon.DateTime.fromJSDate(targetDate);
+            const useDateFilter = document.getElementById('chkDateFilter').checked;
 
             jobs.forEach(job => {
                 const timeString = job.rule?.time || (job.schedule ? job.schedule.match(/(\d{2}):(\d{2})/) : null);
@@ -389,52 +394,63 @@
                 const minutes = parseInt(match[2], 10);
                 const sourceTimezone = getRegionTimezone(job);
 
-                let didRun = false;
+                if (useDateFilter) {
+                    // STRICT DATE FILTERING (No Ghost Executions)
+                    if (viewMode === 'IST') {
+                        const targetBaseIST = selectedLuxon.setZone('Asia/Kolkata').startOf('day');
+                        const localBase = targetBaseIST.setZone(sourceTimezone).startOf('day');
+                        const checkDates = [ localBase.minus({days: 1}), localBase, localBase.plus({days: 1}) ];
 
-                if (viewMode === 'IST') {
-                    const targetBaseIST = selectedLuxon.setZone('Asia/Kolkata').startOf('day');
-                    const localBase = targetBaseIST.setZone(sourceTimezone).startOf('day');
-                    
-                    const checkDates = [ localBase.minus({days: 1}), localBase, localBase.plus({days: 1}) ];
+                        checkDates.forEach(localLuxonDate => {
+                            if (isRunningOnDateLocal(job, localLuxonDate)) {
+                                const localExecution = localLuxonDate.set({ hour: hours, minute: minutes });
+                                const istExecution = localExecution.setZone('Asia/Kolkata');
 
-                    checkDates.forEach(localLuxonDate => {
-                        if (isRunningOnDateLocal(job, localLuxonDate)) {
-                            const localExecution = localLuxonDate.set({ hour: hours, minute: minutes });
-                            const istExecution = localExecution.setZone('Asia/Kolkata');
-
-                            if (istExecution.hasSame(targetBaseIST, 'day')) {
-                                pushResult(job, localExecution, istExecution, false);
-                                didRun = true;
+                                if (istExecution.hasSame(targetBaseIST, 'day')) {
+                                    pushResult(job, localExecution, istExecution, false);
+                                }
                             }
+                        });
+                    } else {
+                        // LOCAL MODE - Strict
+                        const floatingLocal = luxon.DateTime.fromObject({
+                            year: targetDate.getFullYear(), month: targetDate.getMonth() + 1, day: targetDate.getDate()
+                        }, { zone: sourceTimezone });
+
+                        if (isRunningOnDateLocal(job, floatingLocal)) {
+                            const localExecution = floatingLocal.set({ hour: hours, minute: minutes });
+                            const istExecution = localExecution.setZone('Asia/Kolkata');
+                            pushResult(job, localExecution, istExecution, false);
                         }
-                    });
-
-                    // Bypass filter: If user searched it, but it doesn't naturally run today, force it to display
-                    if (!didRun && ignoreDateCheck) {
-                        const fakeLocal = localBase.set({ hour: hours, minute: minutes });
-                        const fakeIST = fakeLocal.setZone('Asia/Kolkata');
-                        pushResult(job, fakeLocal, fakeIST, true);
                     }
-
                 } else {
-                    // LOCAL MODE
-                    const floatingLocal = luxon.DateTime.fromObject({
-                        year: targetDate.getFullYear(), month: targetDate.getMonth() + 1, day: targetDate.getDate()
-                    }, { zone: sourceTimezone });
-
-                    if (isRunningOnDateLocal(job, floatingLocal)) {
-                        const localExecution = floatingLocal.set({ hour: hours, minute: minutes });
-                        const istExecution = localExecution.setZone('Asia/Kolkata');
-                        pushResult(job, localExecution, istExecution, false);
-                    } else if (ignoreDateCheck) {
-                        const localExecution = floatingLocal.set({ hour: hours, minute: minutes });
+                    // CATALOG MODE (Date Filter OFF) - Find the NEXT valid execution to ensure absolute timezone accuracy
+                    const targetBaseLocal = selectedLuxon.setZone(sourceTimezone).startOf('day');
+                    let checkLocal = targetBaseLocal;
+                    let found = false;
+                    
+                    // Look ahead up to 40 days to find the exact next time it naturally runs
+                    for(let i=0; i<40; i++) {
+                        if (isRunningOnDateLocal(job, checkLocal)) {
+                            const localExecution = checkLocal.set({ hour: hours, minute: minutes });
+                            const istExecution = localExecution.setZone('Asia/Kolkata');
+                            pushResult(job, localExecution, istExecution, true);
+                            found = true;
+                            break;
+                        }
+                        checkLocal = checkLocal.plus({ days: 1 });
+                    }
+                    
+                    // Fallback (failsafe) if not found within 40 days
+                    if (!found) {
+                        const localExecution = targetBaseLocal.set({ hour: hours, minute: minutes });
                         const istExecution = localExecution.setZone('Asia/Kolkata');
                         pushResult(job, localExecution, istExecution, true);
                     }
                 }
 
-                function pushResult(jobData, locExec, istExec, isNotScheduled) {
-                    const warningBadge = isNotScheduled ? `<span class="ml-2 text-[9px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded border border-red-200 uppercase tracking-widest shrink-0 shadow-sm" title="This job is forced visible by your search, but is not scheduled to run on the selected date.">Not Scheduled Today</span>` : '';
+                function pushResult(jobData, locExec, istExec, isCatalogView) {
+                    const badgeText = isCatalogView ? `<span class="ml-2 text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 uppercase tracking-widest shrink-0 shadow-sm" title="Date filter off: Showing next valid execution date">Next Run</span>` : '';
                     
                     results.push({
                         job: jobData,
@@ -449,9 +465,9 @@
                         displayPrimary: viewMode === 'IST' ? `${istExec.toFormat('HH:mm')} IST` : `${locExec.toFormat('HH:mm')} ${getShortRegionCode(jobData.region)}`,
                         displaySecondary: viewMode === 'IST' ? 
                             `LOCAL: ${locExec.toFormat('cccc, LLL d')} @ ${locExec.toFormat('HH:mm')} ${getShortRegionCode(jobData.region)}` : 
-                            `IST: ${istExec.toFormat('cccc, LLL d')} @ ${istExec.toFormat('HH:mm')} IST`,
-                        warningBadge: warningBadge,
-                        isNotScheduled: isNotScheduled
+                            `IST CONVERTED: ${istExec.toFormat('cccc, LLL d')} @ ${istExec.toFormat('HH:mm')} IST`,
+                        warningBadge: badgeText,
+                        isCatalogView: isCatalogView
                     });
                 }
             });
@@ -511,7 +527,6 @@
 
         function applyFilters() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const isSearching = query !== '' || activeKeywords.length > 0;
             
             const filteredJobs = jobsData.filter(job => {
                 const matchesSearch = (job.name && job.name.toLowerCase().includes(query)) || 
@@ -527,8 +542,7 @@
                 return matchesSearch && matchesKeywords;
             });
             
-            // Pass the isSearching boolean to bypass date locks
-            compiledExecutions = compileExecutions(filteredJobs, selectedDate, isSearching);
+            compiledExecutions = compileExecutions(filteredJobs, selectedDate);
             renderAll();
         }
 
@@ -554,7 +568,15 @@
 
         function updateDateDisplay() {
             const dateStr = selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-            document.getElementById('currentDateDisplay').innerText = viewMode === 'IST' ? `${dateStr} (IST)` : `${dateStr} (Local)`;
+            const useDateFilter = document.getElementById('chkDateFilter').checked;
+            
+            if (!useDateFilter) {
+                document.getElementById('currentDateDisplay').innerText = `Catalog View (All Jobs)`;
+                document.getElementById('currentDateDisplay').className = "text-sm font-semibold text-slate-500";
+            } else {
+                document.getElementById('currentDateDisplay').innerText = viewMode === 'IST' ? `${dateStr} (IST)` : `${dateStr} (Local)`;
+                document.getElementById('currentDateDisplay').className = "text-sm font-semibold text-blue-600";
+            }
         }
 
         function getColorForRegion(region) {
@@ -571,7 +593,9 @@
 
         function updateCurrentTimeMarker() {
             const line = document.getElementById('currentTimeLine');
-            if (viewMode === 'LOCAL') {
+            const useDateFilter = document.getElementById('chkDateFilter').checked;
+
+            if (viewMode === 'LOCAL' || !useDateFilter) {
                 line.classList.add('hidden'); 
                 return;
             }
@@ -603,7 +627,7 @@
             container.innerHTML = '';
             
             if(compiledExecutions.length === 0) {
-                container.innerHTML = `<p class="text-sm text-slate-500 italic p-4">No jobs executing in this view on this date.</p>`;
+                container.innerHTML = `<p class="text-sm text-slate-500 italic p-4">No jobs to display.</p>`;
                 return;
             }
             
@@ -611,10 +635,9 @@
                 const job = exec.job;
                 const color = getColorForRegion(job.region).replace('bg-', 'text-');
                 const badgeColor = viewMode === 'IST' ? 'bg-blue-50 text-blue-700 border-blue-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100';
-                const opacityClass = exec.isNotScheduled ? 'opacity-60 grayscale' : '';
                 
                 container.innerHTML += `
-                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:border-blue-400 hover:shadow-md transition-all group ${opacityClass}" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})'>
+                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:border-blue-400 hover:shadow-md transition-all group" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})'>
                         <div class="flex justify-between items-center mb-2 gap-2">
                             <div class="flex items-center flex-wrap gap-1">
                                 <span class="text-xs font-black ${color}">${job.id}</span>
@@ -635,10 +658,9 @@
             compiledExecutions.forEach(exec => {
                 const job = exec.job;
                 const badgeColor = viewMode === 'IST' ? 'text-blue-700 bg-blue-50 border-blue-100' : 'text-emerald-700 bg-emerald-50 border-emerald-100';
-                const opacityClass = exec.isNotScheduled ? 'opacity-60 grayscale' : '';
                 
                 container.innerHTML += `
-                    <div class="relative pl-12 ${opacityClass}">
+                    <div class="relative pl-12">
                         <div class="absolute left-[21px] top-6 w-3.5 h-3.5 bg-blue-600 border-2 border-white rounded-full shadow-sm z-10"></div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:shadow-md transition-all hover:border-blue-200" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})'>
                             <div class="flex justify-between items-start mb-3">
@@ -672,11 +694,10 @@
 
             compiledExecutions.forEach(exec => {
                 const job = exec.job;
-                const opacityClass = exec.isNotScheduled ? 'opacity-40 border-dashed border-red-500' : '';
                 
                 const labelRow = document.createElement('div');
                 labelRow.className = 'gantt-row';
-                labelRow.innerHTML = `<span class="gantt-label cursor-pointer" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})'>${job.name} ${exec.isNotScheduled ? '<span class="text-red-500 font-black ml-1" title="Not Scheduled Today">!</span>' : ''}</span>`;
+                labelRow.innerHTML = `<span class="gantt-label cursor-pointer" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})'>${job.name}</span>`;
                 labelsContainer.appendChild(labelRow);
 
                 const barRow = document.createElement('div');
@@ -685,11 +706,11 @@
                 const leftPercent = (exec.sortMinutes / 1440) * 100;
                 const widthPercent = (45 / 1440) * 100; 
                 const colorClass = getColorForRegion(job.region);
-                const hoverTitle = `${job.name} | ${exec.displayPrimary} | ${exec.displaySecondary}${exec.isNotScheduled ? ' (Not Scheduled Today)' : ''}`;
+                const hoverTitle = `${job.name} | ${exec.displayPrimary} | ${exec.displaySecondary}`;
 
                 barRow.innerHTML = `
                     <div class="gantt-bar-wrapper">
-                        <div class="gantt-bar ${colorClass} ${opacityClass}" style="left: ${leftPercent}%; width: ${widthPercent}%; min-width: 60px;" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})' title="${hoverTitle}">
+                        <div class="gantt-bar ${colorClass}" style="left: ${leftPercent}%; width: ${widthPercent}%; min-width: 60px;" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})' title="${hoverTitle}">
                             ${job.id}
                         </div>
                     </div>`;
