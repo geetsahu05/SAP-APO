@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APO DP Batch Monitor (IST Operator View)</title>
+    <title>APO DP Batch Monitor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
     <style>
@@ -48,12 +48,18 @@
         <div class="flex items-center gap-6">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold shadow-md">APO</div>
-                <h1 class="text-xl font-bold text-slate-800 tracking-tight">Batch Scheduler (IST Focus)</h1>
+                <h1 class="text-xl font-bold text-slate-800 tracking-tight" id="mainTitle">Batch Scheduler</h1>
             </div>
             
             <div class="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
                 <button id="btnLaundry" onclick="switchSector('laundry')" class="px-5 py-1.5 text-sm font-bold rounded-md bg-white shadow-sm text-blue-600 transition-all">Laundry</button>
                 <button id="btnBeauty" onclick="switchSector('beauty')" class="px-5 py-1.5 text-sm font-bold rounded-md text-slate-500 hover:text-slate-700 transition-all">Beauty</button>
+            </div>
+
+            <!-- New View Mode Toggle -->
+            <div class="flex items-center bg-amber-50 p-1 rounded-lg border border-amber-200 ml-4">
+                <button id="btnModeIST" onclick="toggleViewMode('IST')" class="px-4 py-1 text-xs font-black rounded text-amber-700 bg-white shadow-sm border border-amber-200 transition-all">IST OPERATOR</button>
+                <button id="btnModeLocal" onclick="toggleViewMode('LOCAL')" class="px-4 py-1 text-xs font-black rounded text-amber-600 hover:text-amber-800 transition-all">LOCAL VIEWER</button>
             </div>
         </div>
         
@@ -73,7 +79,7 @@
         <aside class="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0 z-10">
             <div class="p-5 border-b border-slate-100 bg-slate-50/80">
                 <div class="flex justify-between items-center mb-2">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500">Monitor Target Date (IST)</h2>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-500" id="sidebarTitle">Monitor Target Date (IST)</h2>
                 </div>
                 <input type="date" id="dateSelector" class="w-full mb-3 px-3 py-2 border border-slate-300 rounded text-sm text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-sm transition-all">
                 <p id="currentDateDisplay" class="text-sm font-semibold text-blue-600"></p>
@@ -84,7 +90,7 @@
         <main class="flex-1 flex flex-col overflow-hidden bg-slate-50/50">
             <div class="flex px-8 pt-5 gap-8 border-b border-slate-200 bg-white shrink-0 justify-between items-center">
                 <div class="flex gap-8">
-                    <button onclick="switchTab('list')" id="tabList" class="pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors">IST Execution List</button>
+                    <button onclick="switchTab('list')" id="tabList" class="pb-4 text-sm font-bold text-slate-500 hover:text-slate-700 border-b-2 border-transparent transition-colors">Execution List</button>
                     <button onclick="switchTab('chart')" id="tabChart" class="pb-4 text-sm font-bold text-blue-600 border-b-2 border-blue-600 transition-colors">24-Hour Timeline</button>
                 </div>
                 <div class="flex gap-2 pb-3 items-center">
@@ -125,7 +131,7 @@
         </main>
     </div>
 
-    <!-- Modals (Add / Edit) -->
+    <!-- Modals (Add / Edit / Details) -->
     <div id="addJobModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
             <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
@@ -152,12 +158,12 @@
                     <input type="text" id="jobRegion" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">ABAP Program & Variants</label>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">ABAP Program</label>
                     <input type="text" id="jobAbap" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1">Schedule (e.g. Daily 03:40)</label>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Schedule (Text)</label>
                         <input type="text" id="jobSchedule" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all">
                     </div>
                     <div>
@@ -184,15 +190,15 @@
                 <button onclick="toggleModal('detailsModal')" class="text-slate-400 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 rounded-full p-2 transition-colors">&times;</button>
             </div>
             <div class="p-6 flex-1 overflow-y-auto space-y-6 bg-slate-50/50">
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 shadow-sm flex-1 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-blue-600 text-white text-[9px] font-black px-3 py-1 rounded-bl-lg tracking-wider">IST MONITOR TIME</div>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 shadow-sm flex-1 relative overflow-hidden" id="modalPrimaryBlock">
+                    <div class="absolute top-0 right-0 bg-blue-600 text-white text-[9px] font-black px-3 py-1 rounded-bl-lg tracking-wider" id="modalPrimaryBadge">IST TIME</div>
                     <h4 class="text-[10px] font-black text-blue-600/70 uppercase tracking-wider mb-1 mt-2">Will Execute At</h4>
-                    <p id="detScheduleIST" class="text-blue-700 text-2xl font-black"></p>
+                    <p id="detSchedulePrimary" class="text-blue-700 text-2xl font-black"></p>
                 </div>
                 
                 <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex-1">
-                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Local Configured Schedule</h4>
-                    <p id="detScheduleLocal" class="text-slate-700 text-sm font-bold"></p>
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1" id="modalSecondaryLabel">Local Configured Schedule</h4>
+                    <p id="detScheduleSecondary" class="text-slate-700 text-sm font-bold"></p>
                     <p id="detRegion" class="text-slate-500 text-xs mt-1"></p>
                 </div>
 
@@ -217,12 +223,34 @@
     <script>
         // State Management
         let currentSector = 'laundry';
+        let viewMode = 'IST'; // 'IST' or 'LOCAL'
         let jobsData = [];
         let selectedDate = new Date();
         let activeKeywords = [];
         let compiledExecutions = []; 
 
-        // Synchronize Scrolling between Sidebar and Timeline vertically
+        function toggleViewMode(mode) {
+            viewMode = mode;
+            
+            const btnIST = document.getElementById('btnModeIST');
+            const btnLocal = document.getElementById('btnModeLocal');
+            
+            if (mode === 'IST') {
+                btnIST.className = "px-4 py-1 text-xs font-black rounded text-amber-700 bg-white shadow-sm border border-amber-200 transition-all";
+                btnLocal.className = "px-4 py-1 text-xs font-black rounded text-amber-600 hover:text-amber-800 transition-all border border-transparent";
+                document.getElementById('sidebarTitle').innerText = "Monitor Target Date (IST)";
+                document.getElementById('mainTitle').innerText = "Batch Scheduler (IST Focus)";
+            } else {
+                btnLocal.className = "px-4 py-1 text-xs font-black rounded text-amber-700 bg-white shadow-sm border border-amber-200 transition-all";
+                btnIST.className = "px-4 py-1 text-xs font-black rounded text-amber-600 hover:text-amber-800 transition-all border border-transparent";
+                document.getElementById('sidebarTitle').innerText = "Monitor Target Date (Local)";
+                document.getElementById('mainTitle').innerText = "Batch Scheduler (Local Focus)";
+            }
+            
+            updateDateDisplay();
+            applyFilters();
+        }
+
         function initScrollSync() {
             const labelsContainer = document.getElementById('ganttLabelsContainer');
             const timelineContainer = document.getElementById('timelineScrollContainer');
@@ -238,7 +266,6 @@
             });
         }
 
-        // Standard 24-Hour Grid
         function generateGanttGrid() {
             const headersContainer = document.getElementById('ganttTimeHeaders');
             const gridContainer = document.getElementById('ganttGridLines');
@@ -259,7 +286,6 @@
             }
         }
 
-        // Helper to extract a short Region code (e.g. MEA, SKP, WEU)
         function getShortRegionCode(region) {
             if (!region) return '';
             const r = region.toUpperCase();
@@ -283,9 +309,7 @@
             return first;
         }
 
-        // Advanced Timezone Mapping
         function getRegionTimezone(job) {
-            // 1. If an explicit timezone is provided in the rule, map it directly
             if (job.rule && job.rule.timezone) {
                 const tz = job.rule.timezone.toUpperCase();
                 if (tz.includes('CET') || tz.includes('CEST')) return 'Europe/Berlin';
@@ -298,86 +322,62 @@
                 return job.rule.timezone;
             }
             
-            // 2. Intelligent fallback parsing across both region and schedule text
             const text = ((job.region || '') + ' ' + (job.schedule || '')).toUpperCase();
-            if (text.includes('EST') || text.includes('NA') || text.includes('CONNECTICUT') || text.includes('NY TIME')) return 'America/New_York';
+            if (text.includes('EST') || text.includes('NA') || text.includes('CONNECTICUT')) return 'America/New_York';
             if (text.includes('COT') || text.includes('COLOMBIA') || text.includes('LAT')) return 'America/Bogota';
             if (text.includes('AEST') || text.includes('AEDT') || text.includes('SYDNEY') || text.includes('ANZ')) return 'Australia/Sydney';
-            if (text.includes('CST') || text.includes('CHINA') || text.includes('BEIJING') || text.includes('GCN')) return 'Asia/Shanghai';
+            if (text.includes('CST') || text.includes('CHINA') || text.includes('GCN')) return 'Asia/Shanghai';
             if (text.includes('KST') || text.includes('ROK')) return 'Asia/Seoul';
             if (text.includes('UTC') || text.includes('UT')) return 'UTC';
             
-            return 'Europe/Berlin'; // Default fallback for CET, WEU, CEE, CIS, MEA, SKP, and DE
+            return 'Europe/Berlin'; 
         }
 
-        // Universal Rule Execution Evaluator
-        function isRunningOnDateLocal(job, targetDate) {
-            if (!job.rule) return isRunningOnLegacyString(job.schedule, targetDate);
+        function isRunningOnDateLocal(job, luxonDate) {
+            if (!job.rule) return isRunningOnLegacyString(job.schedule, luxonDate);
             const rule = job.rule;
-            const dayOfWeek = targetDate.getDay();
-            const dayOfMonth = targetDate.getDate();
+            const jsDayOfWeek = luxonDate.weekday === 7 ? 0 : luxonDate.weekday;
+            const dayOfMonth = luxonDate.day;
 
             switch (rule.frequency) {
-                case 'daily': 
-                    return true;
+                case 'daily': return true;
                 case 'weekdays': 
-                    if (Array.isArray(rule.days)) return rule.days.includes(dayOfWeek);
-                    if (typeof rule.days === 'number') return rule.days === dayOfWeek;
-                    return [1, 2, 3, 4, 5].includes(dayOfWeek);
-                case 'weekly': 
-                    return dayOfWeek === rule.day;
-                case 'monthly_start': 
-                    return dayOfMonth === 1;
-                case 'monthly_last_day':
-                    // Calculates the total days in the current target month
-                    const daysInMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).getDate();
-                    return dayOfMonth === daysInMonth;
-                case 'monthly_first_wednesday': // Maintained for backward compatibility
-                    return dayOfWeek === 3 && dayOfMonth <= 7;
+                    if (Array.isArray(rule.days)) return rule.days.includes(jsDayOfWeek);
+                    if (typeof rule.days === 'number') return rule.days === jsDayOfWeek;
+                    return [1, 2, 3, 4, 5].includes(jsDayOfWeek);
+                case 'weekly': return jsDayOfWeek === rule.day;
+                case 'monthly_start': return dayOfMonth === 1;
+                case 'monthly_last_day': return dayOfMonth === luxonDate.daysInMonth;
+                case 'monthly_first_wednesday': return jsDayOfWeek === 3 && dayOfMonth <= 7;
                 case 'monthly_nth_weekday':
-                    // 1. Must be the exact target day (0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat)
-                    if (dayOfWeek !== rule.day) return false;
-                    
-                    // 2. Handle "last" specific weekday of the month (e.g., "Last Friday")
-                    if (rule.n === 'last') {
-                        const totalDays = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).getDate();
-                        return (dayOfMonth + 7) > totalDays;
-                    }
-                    
-                    // 3. Handle 1st, 2nd, 3rd, 4th, 5th occurrence
-                    const occurrence = Math.ceil(dayOfMonth / 7);
-                    return occurrence === rule.n;
+                    if (jsDayOfWeek !== rule.day) return false;
+                    if (rule.n === 'last') return (dayOfMonth + 7) > luxonDate.daysInMonth;
+                    return Math.ceil(dayOfMonth / 7) === rule.n;
                 case 'custom_days': 
-                    if (Array.isArray(rule.days)) return rule.days.includes(dayOfWeek);
-                    if (typeof rule.days === 'number') return rule.days === dayOfWeek;
+                    if (Array.isArray(rule.days)) return rule.days.includes(jsDayOfWeek);
+                    if (typeof rule.days === 'number') return rule.days === jsDayOfWeek;
                     return false;
-                default: 
-                    return false;
+                default: return false;
             }
         }
 
-        function isRunningOnLegacyString(scheduleStr, targetDate) {
+        function isRunningOnLegacyString(scheduleStr, luxonDate) {
             if (!scheduleStr) return false;
             const lowerSch = scheduleStr.toLowerCase();
-            const targetDayShort = targetDate.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
-            const targetDayLong = targetDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-            const targetDayNum = targetDate.getDay(); 
+            const targetDayShort = luxonDate.toFormat('ccc').toLowerCase();
+            const targetDayLong = luxonDate.toFormat('cccc').toLowerCase();
+            const targetDayNum = luxonDate.weekday === 7 ? 0 : luxonDate.weekday; 
+            
             if (lowerSch.includes('daily')) return true;
             if (lowerSch.includes(targetDayShort) || lowerSch.includes(targetDayLong)) return true;
             if ((lowerSch.includes('mon to fri') || lowerSch.includes('mon-fri')) && targetDayNum >= 1 && targetDayNum <= 5) return true;
-            if (lowerSch.includes('first day of the month') && targetDate.getDate() === 1) return true;
+            if (lowerSch.includes('first day of the month') && luxonDate.day === 1) return true;
             return false;
         }
 
-        function compileISTExecutions(jobs, targetISTDate) {
+        function compileExecutions(jobs, targetDate) {
             const results = [];
-            const targetBase = luxon.DateTime.fromJSDate(targetISTDate).setZone('Asia/Kolkata').startOf('day');
-            
-            const checkDates = [
-                targetBase.minus({days: 1}),
-                targetBase,
-                targetBase.plus({days: 1})
-            ];
+            const selectedLuxon = luxon.DateTime.fromJSDate(targetDate);
 
             jobs.forEach(job => {
                 const timeString = job.rule?.time || (job.schedule ? job.schedule.match(/(\d{2}):(\d{2})/) : null);
@@ -390,29 +390,59 @@
                 const minutes = parseInt(match[2], 10);
                 const sourceTimezone = getRegionTimezone(job);
 
-                checkDates.forEach(localDate => {
-                    if (isRunningOnDateLocal(job, localDate.toJSDate())) {
-                        const localExecution = luxon.DateTime.fromObject({
-                            year: localDate.year, month: localDate.month, day: localDate.day,
-                            hour: hours, minute: minutes
-                        }, { zone: sourceTimezone });
+                if (viewMode === 'IST') {
+                    const targetBaseIST = selectedLuxon.setZone('Asia/Kolkata').startOf('day');
+                    const localBase = targetBaseIST.setZone(sourceTimezone).startOf('day');
+                    
+                    const checkDates = [ localBase.minus({days: 1}), localBase, localBase.plus({days: 1}) ];
 
+                    checkDates.forEach(localLuxonDate => {
+                        if (isRunningOnDateLocal(job, localLuxonDate)) {
+                            const localExecution = localLuxonDate.set({ hour: hours, minute: minutes });
+                            const istExecution = localExecution.setZone('Asia/Kolkata');
+
+                            if (istExecution.hasSame(targetBaseIST, 'day')) {
+                                results.push({
+                                    job: job,
+                                    istTime: istExecution,
+                                    localTime: localExecution,
+                                    formattedIST: istExecution.toFormat('HH:mm'),
+                                    formattedLocal: localExecution.toFormat('HH:mm'),
+                                    localDateStr: localExecution.toFormat('cccc, LLL d'),
+                                    istDateStr: istExecution.toFormat('cccc, LLL d'),
+                                    shortRegion: getShortRegionCode(job.region),
+                                    sortMinutes: (istExecution.hour * 60) + istExecution.minute,
+                                    displayPrimary: `${istExecution.toFormat('HH:mm')} IST`,
+                                    displaySecondary: `LOCAL: ${localExecution.toFormat('cccc, LLL d')} @ ${localExecution.toFormat('HH:mm')} ${getShortRegionCode(job.region)}`
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    // LOCAL MODE: Evaluate directly on the floating date selected
+                    const floatingLocal = luxon.DateTime.fromObject({
+                        year: targetDate.getFullYear(), month: targetDate.getMonth() + 1, day: targetDate.getDate()
+                    }, { zone: sourceTimezone });
+
+                    if (isRunningOnDateLocal(job, floatingLocal)) {
+                        const localExecution = floatingLocal.set({ hour: hours, minute: minutes });
                         const istExecution = localExecution.setZone('Asia/Kolkata');
 
-                        if (istExecution.hasSame(targetBase, 'day')) {
-                            results.push({
-                                job: job,
-                                istTime: istExecution,
-                                localTime: localExecution,
-                                formattedIST: istExecution.toFormat('HH:mm'),
-                                formattedLocal: localExecution.toFormat('HH:mm'),
-                                localDateStr: localExecution.toFormat('cccc, LLL d'),
-                                shortRegion: getShortRegionCode(job.region),
-                                sortMinutes: (istExecution.hour * 60) + istExecution.minute
-                            });
-                        }
+                        results.push({
+                            job: job,
+                            istTime: istExecution,
+                            localTime: localExecution,
+                            formattedIST: istExecution.toFormat('HH:mm'),
+                            formattedLocal: localExecution.toFormat('HH:mm'),
+                            localDateStr: localExecution.toFormat('cccc, LLL d'),
+                            istDateStr: istExecution.toFormat('cccc, LLL d'),
+                            shortRegion: getShortRegionCode(job.region),
+                            sortMinutes: (localExecution.hour * 60) + localExecution.minute,
+                            displayPrimary: `${localExecution.toFormat('HH:mm')} ${getShortRegionCode(job.region)}`,
+                            displaySecondary: `IST CONVERTED: ${istExecution.toFormat('cccc, LLL d')} @ ${istExecution.toFormat('HH:mm')} IST`
+                        });
                     }
-                });
+                }
             });
 
             results.sort((a, b) => a.sortMinutes - b.sortMinutes);
@@ -425,10 +455,8 @@
                 e.preventDefault();
                 const val = this.value.trim().toLowerCase();
                 if (val && !activeKeywords.includes(val)) {
-                    activeKeywords.push(val);
-                    this.value = '';
-                    renderKeywords();
-                    applyFilters();
+                    activeKeywords.push(val); this.value = '';
+                    renderKeywords(); applyFilters();
                 }
             }
         });
@@ -441,55 +469,33 @@
             activeKeywords.forEach(kw => {
                 container.innerHTML += `
                     <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-700 shadow-sm flex items-center gap-1">
-                        ${kw}
-                        <button onclick="removeKeyword('${kw}')" class="hover:bg-blue-200 hover:text-blue-900 rounded-full ml-0.5 px-1 focus:outline-none transition-colors">&times;</button>
+                        ${kw} <button onclick="removeKeyword('${kw}')" class="hover:bg-blue-200 hover:text-blue-900 rounded-full ml-0.5 px-1 focus:outline-none transition-colors">&times;</button>
                     </span>`;
             });
         }
 
-        // Core Data Loader (Strict GitHub Viewer - Safe JSON Parser)
         async function loadSectorData() {
             const fileName = `./${currentSector}.json?t=${new Date().getTime()}`;
-            
             try {
                 const response = await fetch(fileName, { cache: 'no-store' });
                 if (!response.ok) throw new Error(`Failed to load ${fileName}`);
-                
                 const textData = await response.text();
-                
-                if (!textData || textData.trim() === "") {
-                    jobsData = [];
-                } else {
-                    try {
-                        jobsData = JSON.parse(textData);
-                    } catch (jsonErr) {
-                        console.error("JSON Syntax Error in your file:", jsonErr);
-                        jobsData = [];
-                    }
-                }
-                
+                jobsData = (!textData || textData.trim() === "") ? [] : JSON.parse(textData);
                 applyFilters();
-                
             } catch (error) {
                 console.error("Error fetching live data:", error);
-                jobsData = [];
-                applyFilters();
+                jobsData = []; applyFilters();
             }
         }
 
-        function saveJobs() { 
-            applyFilters(); 
-        }
+        function saveJobs() { applyFilters(); }
 
         function switchSector(sector) {
             currentSector = sector;
             document.getElementById('btnLaundry').className = sector === 'laundry' ? "px-5 py-1.5 text-sm font-bold rounded-md bg-white shadow-sm text-blue-600 transition-all" : "px-5 py-1.5 text-sm font-bold rounded-md text-slate-500 hover:text-slate-700 transition-all";
             document.getElementById('btnBeauty').className = sector === 'beauty' ? "px-5 py-1.5 text-sm font-bold rounded-md bg-white shadow-sm text-blue-600 transition-all" : "px-5 py-1.5 text-sm font-bold rounded-md text-slate-500 hover:text-slate-700 transition-all";
-            
             document.getElementById('searchInput').value = '';
-            activeKeywords = []; 
-            renderKeywords();
-            loadSectorData();
+            activeKeywords = []; renderKeywords(); loadSectorData();
         }
 
         function applyFilters() {
@@ -508,7 +514,7 @@
                 return matchesSearch && matchesKeywords;
             });
             
-            compiledExecutions = compileISTExecutions(filteredJobs, selectedDate);
+            compiledExecutions = compileExecutions(filteredJobs, selectedDate);
             renderAll();
         }
 
@@ -534,7 +540,7 @@
 
         function updateDateDisplay() {
             const dateStr = selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-            document.getElementById('currentDateDisplay').innerText = `${dateStr} (IST)`;
+            document.getElementById('currentDateDisplay').innerText = viewMode === 'IST' ? `${dateStr} (IST)` : `${dateStr} (Local)`;
         }
 
         function getColorForRegion(region) {
@@ -550,9 +556,14 @@
         }
 
         function updateCurrentTimeMarker() {
+            const line = document.getElementById('currentTimeLine');
+            if (viewMode === 'LOCAL') {
+                line.classList.add('hidden'); // Doesn't make sense to show a single current time across multiple timezones
+                return;
+            }
+            
             const now = luxon.DateTime.now().setZone('Asia/Kolkata');
             const isToday = now.hasSame(luxon.DateTime.fromJSDate(selectedDate), 'day');
-            const line = document.getElementById('currentTimeLine');
             
             if(isToday) {
                 const percent = ((now.hour * 60 + now.minute) / 1440) * 100;
@@ -578,22 +589,23 @@
             container.innerHTML = '';
             
             if(compiledExecutions.length === 0) {
-                container.innerHTML = '<p class="text-sm text-slate-500 italic p-4">No jobs executing in IST on this date.</p>';
+                container.innerHTML = `<p class="text-sm text-slate-500 italic p-4">No jobs executing in this view on this date.</p>`;
                 return;
             }
             
             compiledExecutions.forEach(exec => {
                 const job = exec.job;
                 const color = getColorForRegion(job.region).replace('bg-', 'text-');
+                const badgeColor = viewMode === 'IST' ? 'bg-blue-50 text-blue-700 border-blue-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100';
                 
                 container.innerHTML += `
                     <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:border-blue-400 hover:shadow-md transition-all group" onclick='openDetailsByExecution(${JSON.stringify(exec).replace(/'/g, "&apos;").replace(/"/g, "&quot;")})'>
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-xs font-black ${color}">${job.id}</span>
-                            <span class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-1 rounded-md tracking-wider border border-blue-100">${exec.formattedIST} IST</span>
+                            <span class="text-[10px] font-bold px-2 py-1 rounded-md tracking-wider border ${badgeColor}">${exec.displayPrimary}</span>
                         </div>
                         <div class="text-sm font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors">${job.name}</div>
-                        <div class="text-[9px] font-bold text-slate-400 truncate mt-1">LOCAL: ${exec.localDateStr} @ ${exec.formattedLocal} ${exec.shortRegion}</div>
+                        <div class="text-[9px] font-bold text-slate-400 truncate mt-1 uppercase tracking-wider">${exec.displaySecondary}</div>
                     </div>`;
             });
         }
@@ -604,6 +616,8 @@
             
             compiledExecutions.forEach(exec => {
                 const job = exec.job;
+                const badgeColor = viewMode === 'IST' ? 'text-blue-700 bg-blue-50 border-blue-100' : 'text-emerald-700 bg-emerald-50 border-emerald-100';
+                
                 container.innerHTML += `
                     <div class="relative pl-12">
                         <div class="absolute left-[21px] top-6 w-3.5 h-3.5 bg-blue-600 border-2 border-white rounded-full shadow-sm z-10"></div>
@@ -614,8 +628,8 @@
                                     <h3 class="text-lg font-black text-slate-800">${job.name}</h3>
                                 </div>
                                 <div class="flex flex-col items-end gap-1">
-                                    <span class="text-sm font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">${exec.formattedIST} IST</span>
-                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded">LOCAL: ${exec.localDateStr} @ ${exec.formattedLocal} ${exec.shortRegion}</span>
+                                    <span class="text-sm font-bold px-3 py-1.5 rounded-lg border ${badgeColor}">${exec.displayPrimary}</span>
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded">${exec.displaySecondary}</span>
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-4 text-sm text-slate-600 mb-3">
@@ -648,9 +662,9 @@
                 barRow.className = 'gantt-row';
                 
                 const leftPercent = (exec.sortMinutes / 1440) * 100;
-                const widthPercent = (45 / 1440) * 100; // ~45 mins block on 24h timeline
+                const widthPercent = (45 / 1440) * 100; 
                 const colorClass = getColorForRegion(job.region);
-                const hoverTitle = `${job.name} | ${exec.formattedIST} IST | Local: ${exec.formattedLocal} ${exec.shortRegion} (${exec.localDateStr})`;
+                const hoverTitle = `${job.name} | ${exec.displayPrimary} | ${exec.displaySecondary}`;
 
                 barRow.innerHTML = `
                     <div class="gantt-bar-wrapper">
@@ -689,8 +703,21 @@
             document.getElementById('detRegion').innerText = job.region;
             document.getElementById('detBox').innerText = job.box;
             
-            document.getElementById('detScheduleLocal').innerText = `${exec.formattedLocal} ${exec.shortRegion} (${job.schedule})`;
-            document.getElementById('detScheduleIST').innerText = `${exec.formattedIST} IST`;
+            document.getElementById('detSchedulePrimary').innerText = exec.displayPrimary;
+            
+            if (viewMode === 'IST') {
+                document.getElementById('modalPrimaryBlock').className = "bg-blue-50 p-4 rounded-xl border border-blue-200 shadow-sm flex-1 relative overflow-hidden";
+                document.getElementById('modalPrimaryBadge').className = "absolute top-0 right-0 bg-blue-600 text-white text-[9px] font-black px-3 py-1 rounded-bl-lg tracking-wider";
+                document.getElementById('modalPrimaryBadge').innerText = "IST MONITOR TIME";
+                document.getElementById('detScheduleSecondary').innerText = `${exec.formattedLocal} ${exec.shortRegion} (${job.schedule})`;
+                document.getElementById('modalSecondaryLabel').innerText = "Local Configured Schedule";
+            } else {
+                document.getElementById('modalPrimaryBlock').className = "bg-emerald-50 p-4 rounded-xl border border-emerald-200 shadow-sm flex-1 relative overflow-hidden";
+                document.getElementById('modalPrimaryBadge').className = "absolute top-0 right-0 bg-emerald-600 text-white text-[9px] font-black px-3 py-1 rounded-bl-lg tracking-wider";
+                document.getElementById('modalPrimaryBadge').innerText = "LOCAL TIME";
+                document.getElementById('detScheduleSecondary').innerText = `${exec.formattedIST} IST`;
+                document.getElementById('modalSecondaryLabel').innerText = "Equivalent IST Time";
+            }
             
             document.getElementById('detAbap').innerText = job.abap;
             document.getElementById('detDependency').innerText = job.dependency;
