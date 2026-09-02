@@ -310,6 +310,7 @@
             return 'Europe/Berlin'; // Default fallback for CET, WEU, CEE, CIS, MEA, SKP, and DE
         }
 
+        // Universal Rule Execution Evaluator
         function isRunningOnDateLocal(job, targetDate) {
             if (!job.rule) return isRunningOnLegacyString(job.schedule, targetDate);
             const rule = job.rule;
@@ -317,19 +318,41 @@
             const dayOfMonth = targetDate.getDate();
 
             switch (rule.frequency) {
-                case 'daily': return true;
+                case 'daily': 
+                    return true;
                 case 'weekdays': 
                     if (Array.isArray(rule.days)) return rule.days.includes(dayOfWeek);
                     if (typeof rule.days === 'number') return rule.days === dayOfWeek;
                     return [1, 2, 3, 4, 5].includes(dayOfWeek);
-                case 'weekly': return dayOfWeek === rule.day;
-                case 'monthly_start': return dayOfMonth === 1;
-                case 'monthly_first_wednesday': return dayOfWeek === 3 && dayOfMonth <= 7;
+                case 'weekly': 
+                    return dayOfWeek === rule.day;
+                case 'monthly_start': 
+                    return dayOfMonth === 1;
+                case 'monthly_last_day':
+                    // Calculates the total days in the current target month
+                    const daysInMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).getDate();
+                    return dayOfMonth === daysInMonth;
+                case 'monthly_first_wednesday': // Maintained for backward compatibility
+                    return dayOfWeek === 3 && dayOfMonth <= 7;
+                case 'monthly_nth_weekday':
+                    // 1. Must be the exact target day (0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat)
+                    if (dayOfWeek !== rule.day) return false;
+                    
+                    // 2. Handle "last" specific weekday of the month (e.g., "Last Friday")
+                    if (rule.n === 'last') {
+                        const totalDays = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).getDate();
+                        return (dayOfMonth + 7) > totalDays;
+                    }
+                    
+                    // 3. Handle 1st, 2nd, 3rd, 4th, 5th occurrence
+                    const occurrence = Math.ceil(dayOfMonth / 7);
+                    return occurrence === rule.n;
                 case 'custom_days': 
                     if (Array.isArray(rule.days)) return rule.days.includes(dayOfWeek);
                     if (typeof rule.days === 'number') return rule.days === dayOfWeek;
                     return false;
-                default: return false;
+                default: 
+                    return false;
             }
         }
 
